@@ -123,3 +123,99 @@ SELECT CONCAT(m.[FirstName], ' ', m.LastName),
 		ORDER BY m.MechanicId, j.IssueDate,j.JobId
 
 --6.	Current Clients
+SELECT  CONCAT(c.FirstName, ' ', c.LastName) AS [Client],
+		DATEDIFF(DAY,j.IssueDate,'04/24/2017') AS [Days going],
+		j.Status 
+		FROM Jobs AS j
+		JOIN Clients AS c
+		ON( j.ClientId = c.ClientId)
+		WHERE j.Status <> 'Finished'
+
+--7.	Mechanic Performance
+
+	SELECT CONCAT(m.FirstName, ' ',m.LastName) AS [Mechanic],
+		AVG(DATEDIFF(DAY,j.IssueDate,j.FinishDate)) AS [Average Days]
+		FROM Jobs AS j
+		JOIN Mechanics AS m
+		ON(j.MechanicId = m.MechanicId)
+		WHERE j.Status = 'Finished'
+		GROUP BY m.MechanicId,m.FirstName,m.LastName,j.[Status]
+		ORDER BY m.MechanicId
+
+--8.	Available Mechanics
+SELECT CONCAT([FirstName], ' ',[LastName]) AS [Available]
+FROM Mechanics
+WHERE MechanicId NOT IN (
+						SELECT MechanicId FROM [Jobs]
+						WHERE [Status] = 'In Progress'
+						GROUP BY [MechanicId]
+						)
+--9.	Past Expenses
+SELECT sq.JobId, SUM(sq.[TotalPrice]) AS [Total] 
+FROM (
+		SELECT j.[JobId],
+		p.Price * op.Quantity AS [TotalPrice]
+		FROM Parts AS p
+	 JOIN OrderParts AS op
+		ON(p.PartId = op.PartId)
+	 JOIN Orders AS r
+		ON(r.OrderId = op.OrderId)
+	 JOIN Jobs AS j
+		ON(j.JobId = r.JobId)
+		WHERE j.[Status]='Finished'
+) AS sq
+GROUP BY sq.JobId
+ORDER BY Total DESC,sq.JobId
+	--mine missing records
+SELECT sq.JobId, SUM(sq.[TotalPrice]) AS [Total] 
+FROM (
+		SELECT j.[JobId],
+		p.Price * pn.Quantity AS [TotalPrice]
+		FROM Jobs AS j
+		JOIN PartsNeeded AS pn
+		ON(j.JobId = pn.JobId)
+		JOIN Parts AS p
+		ON(p.PartId = pn.PartId)
+		WHERE j.[Status]='Finished'
+) AS sq
+GROUP BY sq.JobId
+ORDER BY Total DESC,sq.JobId
+GO
+--working
+
+--10.	Missing Parts
+--11.	Place Order
+
+
+--12.	Cost Of Order
+CREATE FUNCTION udf_GetCost (@jobId INT)
+RETURNS DECIMAL(8,2)
+AS
+BEGIN
+	DECLARE @totalCost DECIMAL(8,2)
+
+	DECLARE @jobOrdersCount INT = (SELECT COUNT(OrderId) FROM Jobs AS j
+									LEFT JOIN Orders AS o
+									ON j.JobId=o.JobId
+									WHERE j.JobId = @jobId
+									)
+	IF @jobOrdersCount = 0
+	BEGIN
+	RETURN 0
+	END
+
+	SET @totalCost = (SELECT SUM(p.Price * op.Quantity) FROM Jobs AS j
+									LEFT JOIN Orders AS o
+									ON j.JobId=o.JobId
+									LEFT JOIN OrderParts op
+									ON o.OrderId = op.OrderId
+									LEFT JOIN Parts AS p
+									ON op.PartId = p.PartId
+									WHERE j.JobId = @jobId
+									)
+	RETURN @totalCost
+END
+GO
+
+SELECT dbo.udf_GetCost (3)
+GO
