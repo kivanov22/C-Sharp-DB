@@ -52,23 +52,23 @@ SELECT * FROM [Planes]
 
 --2.INSERT
 INSERT INTO [Planes]([Name],[Seats],[Range])
-VALUES(
-'Airbus 336',112,5132,
-'Airbus 330',432,5325,
-'Boeing 369',231,2355,
-'Stelt 297',254,2143,
-'Boeing 338',165,5111,
-'Airbus 558',387,1342,
-'Boeing 128',345,5541
-)
+VALUES
+('Airbus 336',112,5132),
+('Airbus 330',432,5325),
+('Boeing 369',231,2355),
+('Stelt 297',254,2143),
+('Boeing 338',165,5111),
+('Airbus 558',387,1342),
+('Boeing 128',345,5541)
+
 
 
 INSERT INTO [LuggageTypes]([Type])
-VALUES(
-'Crossbody Bag',
-'School Backpack',
-'Shoulder Bag'
-)
+VALUES
+('Crossbody Bag'),
+('School Backpack'),
+('Shoulder Bag')
+
 
 --3.UPDATE
 UPDATE Tickets
@@ -85,3 +85,57 @@ DELETE FROM Tickets WHERE FlightId IN (SELECT [Id]
 										WHERE Destination ='Ayn Halagim')
 
 DELETE FROM Flights WHERE Destination = 'Ayn Halagim'
+
+--5.	The "Tr" Planes
+
+SELECT * FROM Planes
+WHERE [Name] LIKE '%tr%'
+ORDER BY [Id],[Name],[Seats],[Range]
+
+--6.	Flight Profits
+SELECT [FlightId],
+		SUM(Price) AS [TotalPrice]
+		FROM [Tickets] 
+		GROUP BY FlightId
+		ORDER BY [TotalPrice] DESC, [FlightId]
+
+--7.	Passenger Trips
+SELECT CONCAT([FirstName],' ', [LastName]) AS [Full Name],
+		f.Origin,
+		f.Destination
+		FROM [Passengers] AS p
+		JOIN Tickets AS t
+		ON(p.Id = t.PassengerId)
+		JOIN Flights AS f
+		ON(t.FlightId = f.Id)
+		ORDER BY [Full Name] , f.Origin, f.Destination
+
+--8.	Non Adventures People
+SELECT p.FirstName,
+		p.LastName,
+		p.Age
+		FROM [Passengers] AS p
+		LEFT JOIN Tickets AS t
+		ON(p.Id=t.PassengerId)
+		WHERE t.Id IS NULL
+		ORDER BY p.Age DESC ,p.FirstName,p.LastName
+
+--9.	Full Info
+SELECT CONCAT(p.[FirstName],' ',p.LastName) AS [Full Name],
+			pl.[Name] AS [Plane Name],
+			CONCAT(f.Origin,' - ',f.Destination) AS [Trip],
+			lgt.[Type] AS [Luggage Type]
+		FROM Passengers AS p
+		 JOIN  Tickets AS t
+		 ON( p.Id = t.PassengerId)
+		 JOIN Flights AS f
+		 ON( t.FlightId = f.Id)
+		 JOIN Planes AS pl
+		 ON(f.PlaneId = pl.Id)
+		 JOIN Luggages AS l
+		 ON(t.LuggageId = l.Id)
+		 JOIN LuggageTypes AS lgt
+		 ON(l.LuggageTypeId = lgt.id)
+		 ORDER BY [Full Name],[Plane Name],f.Origin,f.Destination,lgt.[Type]
+
+--10.	PSP
