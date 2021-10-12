@@ -139,3 +139,25 @@ SELECT CONCAT(p.[FirstName],' ',p.LastName) AS [Full Name],
 		 ORDER BY [Full Name],[Plane Name],f.Origin,f.Destination,lgt.[Type]
 
 --10.	PSP
+
+SELECT p.[Name],
+		p.Seats,
+		COUNT(t.Id) AS [Passenger Count]
+		FROM [Planes] AS p
+		LEFT JOIN Flights AS f
+		ON(p.Id = f.PlaneId)
+		LEFT JOIN Tickets AS t
+		ON(f.Id= t.FlightId)
+		GROUP BY p.Id,p.[Name],p.Seats
+		ORDER BY [Passenger Count] DESC, p.[Name],p.Seats
+		GO
+--11.	Vacation
+
+--12.	Wrong Data
+CREATE PROCEDURE usp_CancelFlights
+AS 
+BEGIN
+			UPDATE Flights
+			SET DepartureTime=NULL, ArrivalTime= NULL
+			WHERE ArrivalTime > DepartureTime
+END
