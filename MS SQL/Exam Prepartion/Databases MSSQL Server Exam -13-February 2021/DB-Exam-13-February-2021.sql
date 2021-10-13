@@ -83,3 +83,40 @@ WHERE RepositoryId = 3
 
 
 --5.	Commits
+SELECT [Id],[Message],[RepositoryId],[ContributorId] FROM Commits
+ORDER BY Id,[Message],RepositoryId,ContributorId
+
+--6.	Front-end
+SELECT [Id],[Name],[Size] FROM Files
+WHERE Size > 1000 AND [Name] LIKE '%html%'
+ORDER BY Size DESC,Id,[Name]
+
+--7.	Issue Assignment
+SELECT i.Id,
+		CONCAT(u.Username,' : ',i.Title) AS [IssueAssignee]
+		FROM [Users] AS u
+		 JOIN Issues AS i
+		ON i.AssigneeId = u.Id
+		ORDER BY i.Id DESC,[IssueAssignee]
+
+--8.	Single Files
+SELECT f.[Id],
+		f.[Name],
+		CONCAT(f.Size,'KB') AS [Size]
+		FROM Files AS f
+		LEFT JOIN Files AS fl
+		ON fl.ParentId=f.Id
+		WHERE fl.ParentId IS NULL
+		ORDER BY f.Id,f.[Name],f.Size DESC
+
+--9.	Commits in Repositories
+SELECT TOP(5) r.Id,
+		r.[Name],
+		COUNT(*) AS [Commits]
+		FROM RepositoriesContributors AS rc
+		JOIN Repositories AS r
+		ON rc.RepositoryId = r.Id
+		JOIN Commits AS c
+		ON r.Id = c.RepositoryId
+		GROUP BY r.Id,r.[Name]
+		ORDER BY [Commits] DESC,r.Id,r.[Name]
