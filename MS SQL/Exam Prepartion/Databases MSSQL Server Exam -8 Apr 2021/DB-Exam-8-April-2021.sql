@@ -78,3 +78,72 @@ DELETE FROM Reports
 WHERE [StatusId]=4
 
 --5.	Unassigned Reports
+SELECT [Description],
+		FORMAT([OpenDate],'dd-MM-yyyy')
+		FROM Reports
+		WHERE EmployeeId IS NULL
+		ORDER BY OpenDate,[Description]
+
+--6.	Reports & Categories
+SELECT r.[Description],
+		c.[Name] AS [CategoryName]
+		FROM Reports AS r
+		LEFT JOIN Categories AS c
+		ON (r.CategoryId = c.Id)
+		ORDER BY r.[Description],[CategoryName]
+
+--7.	Most Reported Category
+SELECT TOP(5) c.[Name] AS [CategoryName],
+		COUNT(r.[Id]) AS [ReportNumber]
+		FROM Reports AS r
+		JOIN Categories AS c
+		ON(c.Id = r.CategoryId)
+		GROUP BY c.[Name]
+		ORDER BY ReportNumber DESC,CategoryName
+
+--8.	Birthday Report
+SELECT u.[Username] AS [Username],
+		c.[Name] AS [CategoryName]
+		FROM Reports AS r
+		JOIN Users AS u
+		ON( r.UserId=u.Id )
+		 JOIN Categories AS c
+		ON(r.CategoryId = c.Id)
+		WHERE DAY(u.Birthdate) = DAY(r.OpenDate)
+		ORDER BY Username,CategoryName
+
+--9.	Users per Employee 
+SELECT  CONCAT(e.FirstName, ' ',e.LastName) AS [FullName],
+		COUNT(u.Id) AS [UsersCount]
+		FROM Employees AS e
+		LEFT JOIN Reports As r
+		ON e.Id = r.EmployeeId
+		LEFT JOIN Users AS u
+		ON u.Id = r.UserId
+		GROUP BY e.FirstName,e.LastName
+		ORDER BY UsersCount DESC, FullName
+
+--10.	Full Info
+SELECT CASE
+		WHEN	COALESCE(e.FirstName,e.LastName) IS NOT NULL
+		THEN CONCAT(e.FirstName, ' ',e.LastName) 
+		ELSE 'None'
+		END AS [Employee],
+		ISNULL(d.[Name],'None') AS [Department],
+		ISNULL (c.[Name],'None') AS [Category],
+		ISNULL (r.[Description],'None'),
+		ISNULL (FORMAT(r.OpenDate,'dd.MM.yyyy'),'None') AS [OpenDate],
+		ISNULL (s.[Label],'None') AS [Status],
+		ISNULL (u.[Name],'None') AS [User]
+		FROM Reports AS r
+		LEFT JOIN Employees AS e ON e.Id = r.EmployeeId
+		LEFT JOIN Departments AS d ON d.Id = e.DepartmentId
+		LEFT JOIN Categories AS c ON c.Id = r.CategoryId
+		LEFT JOIN [Status] AS s ON s.Id = r.StatusId
+		LEFT JOIN Users AS u ON u.Id = r.UserId
+		ORDER BY e.[FirstName] DESC,e.[LastName] DESC,[Department],[Category],r.[Description],r.OpenDate,[Status],[User]
+
+--11.	Hours to Complete
+
+
+--12.	Assign Employee
