@@ -142,8 +142,57 @@ SELECT CASE
 		LEFT JOIN [Status] AS s ON s.Id = r.StatusId
 		LEFT JOIN Users AS u ON u.Id = r.UserId
 		ORDER BY e.[FirstName] DESC,e.[LastName] DESC,[Department],[Category],r.[Description],r.OpenDate,[Status],[User]
+		GO
 
 --11.	Hours to Complete
+CREATE FUNCTION udf_HoursToComplete(@StartDate DATETIME, @EndDate DATETIME) 
+RETURNS INT
+AS
+BEGIN 
+		DECLARE @totalHours INT
 
+		IF @StartDate IS NULL AND @EndDate IS NULL
+		BEGIN
+		SET @totalHours = 0
+		END
+		ELSE
+		BEGIN 
+		SET @totalHours =  DATEDIFF(HOUR,@StartDate,@EndDate)
+		END
 
+RETURN @totalHours
+END
+
+GO
+
+SELECT dbo.udf_HoursToComplete(OpenDate, CloseDate) AS TotalHours
+   FROM Reports
+
+   GO
 --12.	Assign Employee
+CREATE PROCEDURE usp_AssignEmployeeToReport(@EmployeeId INT, @ReportId INT) 
+AS
+BEGIN
+	IF( SELECT e.Id
+				FROM Employees AS e
+				 JOIN Departments AS d
+				ON e.DepartmentId = d.Id
+				 JOIN Categories AS c
+				ON d.Id = c.DepartmentId
+				 JOIN Reports AS r
+				ON c.Id = r.CategoryId
+				WHERE e.Id=@EmployeeId AND r.Id = @ReportId) IS NULL
+
+				THROW 500001, 'Employee doesn''t belong to the appropriate department!',1
+				UPDATE Reports
+				SET EmployeeId = @EmployeeId
+				WHERE Id =@ReportId
+END
+
+GO
+
+EXEC usp_AssignEmployeeToReport 30, 1 -- error
+GO
+
+EXEC usp_AssignEmployeeToReport 17, 2 --no error
+GO
