@@ -152,7 +152,24 @@ SELECT p.[Name],
 		ORDER BY [Passenger Count] DESC, p.[Name],p.Seats
 		GO
 --11.	Vacation
+CREATE FUNCTION udf_CalculateTickets(@origin VARCHAR(50), @destination VARCHAR(50), @peopleCount INT) 
+RETURNS VARCHAR(50)
+BEGIN
+	DECLARE @totalPrice DECIMAL(6,2)
 
+	IF @peopleCount <=0
+	BEGIN
+	RETURN 'Invalid people count!'
+	END
+
+	IF (NOT EXISTS (SELECT 1 FROM Flights WHERE Origin = @origin AND Destination = @destination))
+        RETURN 'Invalid flight!'
+    RETURN CONCAT('Total price ', 
+    (SELECT TOP(1) ts.Price FROM Tickets AS ts 
+    JOIN Flights AS f ON ts.FlightId = f.Id
+    WHERE f.Origin = @origin AND f.Destination = @destination) * @peopleCount)
+END
+GO
 --12.	Wrong Data
 CREATE PROCEDURE usp_CancelFlights
 AS 
