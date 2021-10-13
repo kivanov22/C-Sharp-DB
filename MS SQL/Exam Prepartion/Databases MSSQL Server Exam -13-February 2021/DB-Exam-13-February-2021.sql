@@ -120,3 +120,40 @@ SELECT TOP(5) r.Id,
 		ON r.Id = c.RepositoryId
 		GROUP BY r.Id,r.[Name]
 		ORDER BY [Commits] DESC,r.Id,r.[Name]
+
+--10.	Average Size
+SELECT u.Username,
+		AVG(f.Size) AS [Size]
+		FROM Users AS u
+		JOIN Commits AS c
+		ON u.Id= c.ContributorId
+		JOIN Files AS f
+		ON c.Id = f.CommitId
+		GROUP BY u.Username
+		ORDER BY [Size] DESC,u.Username
+		GO
+--11.	All User Commits
+CREATE FUNCTION udf_AllUserCommits(@username VARCHAR(50))
+RETURNS INT
+BEGIN
+	DECLARE @Id INT = (SELECT [Id] FROM Users WHERE [Username]= @username)
+
+	DECLARE @result INT =(SELECT COUNT([Id]) FROM [Commits] WHERE ContributorId = @Id)
+		
+	RETURN @result
+END
+
+GO
+
+SELECT dbo.udf_AllUserCommits('UnderSinduxrein')
+GO
+--12.	 Search for Files
+CREATE PROCEDURE usp_SearchForFiles(@fileExtension VARCHAR(4))
+AS
+BEGIN 
+		SELECT [Id],[Name],CONCAT([Size],'KB') AS Size FROM Files
+		WHERE [Name] LIKE '%' + @fileExtension + '%'
+		ORDER BY [Id],[Name],[Size] DESC
+END
+
+EXEC usp_SearchForFiles 'txt'
