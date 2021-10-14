@@ -96,3 +96,83 @@ DELETE FROM Feedbacks
 WHERE CustomerId=14 OR ProductId =5
 
 --5.	Products by Price
+SELECT [Name],[Price],[Description] 
+		FROM Products
+		ORDER BY Price DESC,[Name]
+
+--6.	Negative Feedback
+SELECT f.ProductId,
+		f.Rate,
+		f.[Description],
+		c.Id,
+		c.Age,
+		c.Gender
+		FROM Feedbacks AS f
+		JOIN Customers AS c
+		ON c.Id = f.CustomerId
+		WHERE f.Rate < 5.0
+		ORDER BY f.ProductId DESC, f.Rate
+
+--7.	Customers without Feedback
+SELECT CONCAT(c.FirstName , ' ',c.LastName) AS [CustomerName],
+		c.PhoneNumber,
+		c.Gender
+		FROM Feedbacks AS f
+		RIGHT JOIN Customers AS c
+		ON c.Id = f.CustomerId
+		WHERE f.Id IS NULL
+		ORDER BY c.Id
+
+--8.	Customers by Criteria
+SELECT c.FirstName,
+		c.Age,
+		c.PhoneNumber
+		FROM Customers AS c
+		LEFT JOIN Countries AS cu
+		ON cu.Id = c.CountryId
+		WHERE Age >=21 AND c.FirstName LIKE '%an%' OR PhoneNumber LIKE '%38' AND cu.[Name] <> 'Greece'
+		ORDER BY c.FirstName,c.Age DESC
+
+SELECT FirstName,
+		Age,
+		PhoneNumber
+		FROM Customers 
+		WHERE Age >=21 AND FirstName LIKE '%an%' OR PhoneNumber LIKE '%38' AND CountryId <> 31
+		ORDER BY FirstName,Age DESC
+
+--9.	Middle Range Distributors
+SELECT d.[Name] AS [DistributorName],
+		i.[Name] AS [IngredientName],
+		p.[Name] AS [ProductName],
+		AVG(f.Rate) AS [AverageRate]
+		FROM Distributors AS d
+		LEFT JOIN Ingredients AS i ON  i.DistributorId =d.Id 
+		LEFT JOIN ProductsIngredients AS pn ON  pn.IngredientId= i.Id 
+		LEFT JOIN Products AS p ON p.Id = pn.ProductId
+		LEFT JOIN Feedbacks AS f ON   p.Id = f.ProductId
+		--WHERE f.Rate BETWEEN 5 AND 8
+		GROUP BY  d.[Name],i.[Name],p.[Name]
+		HAVING AVG(f.Rate) BETWEEN 5 AND 8
+		ORDER BY [DistributorName],[IngredientName],[ProductName]
+
+--10.	Country Representative
+SELECT k.CountryName,
+		k.DistributorName
+		FROM(SELECT c.[Name] AS [CountryName],
+		d.[Name] AS [DistributorName],
+		COUNT(i.Id) AS [Count],
+		DENSE_RANK() OVER (PARTITION BY c.[Name] ORDER BY COUNT(i.Id) DESC) AS [Rank]
+		FROM Countries AS c
+		LEFT JOIN Distributors AS d
+		ON c.Id = d.CountryId
+		JOIN Ingredients AS i
+		ON d.Id = i.DistributorId
+		GROUP BY c.[Name],d.[Name]
+		) AS k
+		WHERE k.[Rank] = 1
+		ORDER BY k.[CountryName],k.[DistributorName] 
+
+--11.	Customers with Countries
+
+--12.	Delete Products
+
