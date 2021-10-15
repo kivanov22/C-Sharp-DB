@@ -122,3 +122,115 @@ SELECT TOP(10) st.FirstName,
 
 
 --9. Not So In The Studying
+
+SELECT		CONCAT(st.FirstName,' ',st.MiddleName + ' ',st.LastName) AS [Full Name]			
+			FROM StudentsSubjects AS sb
+			RIGHT JOIN Students AS st
+			ON sb.StudentId= st.Id
+			WHERE sb.Id IS NULL
+			ORDER BY [Full Name]
+
+--10. Average Grade per Subject
+SELECT s.[Name],
+		AVG(sb.Grade) AS [AverageGrade]
+		FROM Subjects AS s
+		JOIN StudentsSubjects AS sb
+		ON s.Id = sb.SubjectId
+		GROUP BY s.[Name],s.Id
+		ORDER BY s.Id
+
+		GO
+--11. Exam Grades
+CREATE FUNCTION udf_ExamGradesToUpdate(@studentId INT, @grade DECIMAL(6,2))
+RETURNS NVARCHAR(MAX)
+AS
+BEGIN
+DECLARE @error NVARCHAR(MAX)
+
+	IF NOT EXISTS((SELECT * FROM StudentsExams WHERE StudentId = @studentId))
+	BEGIN
+		SET @error = 'The student with provided id does not exist in the school!'
+		RETURN @error
+	END
+
+	IF (@grade > 6.00)
+	BEGIN
+		SET @error = 'Grade cannot be above 6.00!'
+		RETURN @error
+	END
+
+	DECLARE @studentName NVARCHAR(MAX) = (SELECT FirstName FROM Students WHERE Id = @studentId)
+
+	DECLARE @count INT = 
+		(
+		SELECT 
+		SUM(K.Count) 
+		FROM (
+		SELECT 
+		COUNT(StudentId) AS [Count]
+		FROM StudentsExams 
+		WHERE StudentId = @studentId AND Grade != @grade AND 
+		  Grade BETWEEN @grade - 0.50 AND @grade + 0.50 
+		GROUP BY StudentId, ExamId, Grade
+		) AS K
+		)
+
+	DECLARE @output NVARCHAR(MAX) = 
+				'You have to update ' + 
+				CAST(@count AS NVARCHAR(MAX)) + 
+				' grades for the student ' + 
+				@studentName
+
+	RETURN @output
+END
+GO
+
+SELECT dbo.udf_ExamGradesToUpdate(12, 6.20)
+GO
+
+SELECT dbo.udf_ExamGradesToUpdate(12, 5.50)
+GO
+
+SELECT dbo.udf_ExamGradesToUpdate(121, 5.50)
+GO
+
+--12. Exclude from school
+CREATE PROC usp_ExcludeFromSchool(@StudentId INT)
+AS
+BEGIN
+	
+	IF NOT EXISTS (SELECT * FROM Students WHERE Id = @StudentId)
+	BEGIN
+		THROW 50001, 'This school has no student with the provided id!', 1
+	END
+
+	DELETE 
+		ST
+		FROM StudentsTeachers ST 
+		WHERE ST.StudentId = @StudentId
+
+	DELETE 
+		SE
+		FROM StudentsExams SE
+		WHERE SE.StudentId = @StudentId
+
+	DELETE 
+		SB
+		FROM StudentsSubjects SB
+		WHERE SB.StudentId = @StudentId
+
+	DELETE 
+		Students 
+		WHERE Id = @StudentId
+	
+END
+
+GO
+
+EXEC usp_ExcludeFromSchool 1
+SELECT COUNT(*) FROM Students
+GO
+
+
+EXEC usp_ExcludeFromSchool 301
+GO
