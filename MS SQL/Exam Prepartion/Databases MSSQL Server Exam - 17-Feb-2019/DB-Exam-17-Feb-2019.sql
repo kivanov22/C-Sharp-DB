@@ -86,4 +86,39 @@ DELETE FROM Teachers
 WHERE Phone LIKE '%72%'
 
 --5. Teen Students
+SELECT FirstName,LastName,Age
+		FROM [Students]
+	WHERE Age >=12
+ORDER BY FirstName,LastName
 
+--6. Students Teachers
+SELECT s.[FirstName],
+		s.[LastName],
+		COUNT(t.Id)  AS [TeachersCount]
+		FROM StudentsTeachers AS st
+		JOIN Students AS s
+		ON st.StudentId = s.Id
+		JOIN Teachers AS t
+		ON st.TeacherId= t.Id
+		GROUP BY s.FirstName,s.LastName
+
+--7. Students to Go
+SELECT CONCAT(st.FirstName,' ',st.LastName) AS [Full Name]
+		FROM Students AS st
+		LEFT JOIN StudentsExams AS se
+		ON st.Id= se.StudentId
+		WHERE se.StudentId IS NULL
+		ORDER BY [Full Name]
+
+--8. Top Students
+SELECT TOP(10) st.FirstName,
+		st.LastName,
+		CAST(AVG(se.Grade) AS DECIMAL(3,2)) AS [Grade]
+		FROM StudentsExams AS se
+		JOIN Students AS st
+		ON st.Id = se.StudentId
+		GROUP BY se.StudentId, st.FirstName,st.LastName
+		ORDER BY CAST(AVG(se.Grade) AS DECIMAL(3,2)) DESC,st.FirstName, st.LastName
+
+
+--9. Not So In The Studying
