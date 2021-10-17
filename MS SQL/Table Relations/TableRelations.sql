@@ -103,3 +103,148 @@ VALUES
 ('Mark',101),
 ('Greta',101)
 
+--05. Online Store Database 
+CREATE DATABASE Store
+
+CREATE TABLE ItemTypes(
+	ItemTypeID INT IDENTITY NOT NULL,
+	[Name] NVARCHAR(50) NOT NULL,
+
+	CONSTRAINT PK_ItemTypes_ItemTypeID
+	PRIMARY KEY(ItemTypeID)
+)
+
+CREATE TABLE Items(
+	ItemID INT IDENTITY NOT NULL,
+	[Name] NVARCHAR(50) NOT NULL,
+	ItemTypeID INT NOT NULL
+
+	CONSTRAINT PK_Items_ItemID
+	PRIMARY KEY(ItemID),
+
+	CONSTRAINT FK_Items_ItemsType
+	FOREIGN KEY(ItemTypeID)
+	REFERENCES ItemTypes(ItemTypeID)
+)
+
+CREATE TABLE Cities(
+	CityID INT IDENTITY NOT NULL,
+	[Name] NVARCHAR(50) NOT NULL,
+
+	CONSTRAINT PK_Cities_CityID
+	PRIMARY KEY(CityID)
+)
+
+CREATE TABLE Customers(
+	CustomerID INT IDENTITY NOT NULL,
+	[Name] NVARCHAR(50) NOT NULL,
+	Birthdaty DATE,
+	CityID INT NOT NULL,
+
+	CONSTRAINT PK_Customers
+	PRIMARY KEY(CustomerID),
+
+	CONSTRAINT FK_Customers_Cities
+	FOREIGN KEY(CityID)
+	REFERENCES Cities(CityID)
+)
+
+CREATE TABLE Orders(
+	OrderID INT IDENTITY NOT NULL,
+	CustomerID INT NOT NULL,
+
+	CONSTRAINT PK_Orders
+	PRIMARY KEY (OrderID),
+
+	CONSTRAINT FK_Orders_Customers
+	FOREIGN KEY (CustomerID)
+	REFERENCES Customers(CustomerID)
+)
+
+CREATE TABLE OrderItems(
+	OrderID INT NOT NULL,
+	ItemID INT NOT NULL,
+
+	CONSTRAINT PK_OrderItems
+	PRIMARY KEY(OrderID, ItemID),
+
+	CONSTRAINT FK_PK_OrderItems_Orders
+	FOREIGN KEY(OrderID)
+	REFERENCES Orders(OrderID),
+
+	CONSTRAINT FK_PK_OrderItems_Items
+	FOREIGN KEY(ItemID)
+	REFERENCES Items(ItemID)
+)
+
+
+--07.University Database
+
+CREATE DATABASE University 
+
+CREATE TABLE Subjects(
+	SubjectID INT IDENTITY NOT NULL,
+	SubjectName NVARCHAR(50) NOT NULL,
+
+	CONSTRAINT PK_Subjects
+	PRIMARY KEY(SubjectID)
+)
+
+CREATE TABLE Majors(
+	MajorID INT IDENTITY NOT NULL,
+	[Name] NVARCHAR(50) NOT NULL,
+
+	CONSTRAINT PK_Majors
+	PRIMARY KEY(MajorID)
+)
+
+CREATE TABLE Students(
+	StudentID INT IDENTITY NOT NULL,
+	StudentNumber NVARCHAR(50) NOT NULL,
+	StudentName NVARCHAR(50) NOT NULL,
+	MajorID INT NOT NULL,
+
+	CONSTRAINT PK_Students
+	PRIMARY KEY(StudentID),
+
+	CONSTRAINT FK_Students_Majors
+	FOREIGN KEY(MajorID)
+	REFERENCES Majors(MajorID)
+)
+
+CREATE TABLE Payments(
+	PaymentID INT IDENTITY NOT NULL,
+	PaymentDate DATE NOT NULL,
+	PaymentAmount MONEY NOT NULL,
+	StudentID INT NOT NULL,
+
+	CONSTRAINT PK_Payments
+	PRIMARY KEY (PaymentID),
+
+	CONSTRAINT FK_Payments_Students
+	FOREIGN KEY (StudentID)
+	REFERENCES Students(StudentID)
+)
+
+CREATE TABLE Agenda(
+	StudentID INT NOT NULL,
+	SubjectID INT NOT NULL,
+
+	CONSTRAINT PK_Agenda
+	PRIMARY KEY(StudentID, SubjectID),
+
+	CONSTRAINT FK_Agenda_Students
+	FOREIGN KEY(StudentID)
+	REFERENCES Students(StudentID),
+
+	CONSTRAINT FK_Agenda_Subjects
+	FOREIGN KEY(SubjectID)
+	REFERENCES Subjects(SubjectID)
+)
+
+--9.Peaks in Rila
+SELECT m.MountainRange, p.PeakName, p.Elevation FROM Peaks AS p
+
+JOIN Mountains AS m ON m.Id = p.MountainId
+WHERE MountainRange = 'Rila'
+ORDER BY p.Elevation DESC
