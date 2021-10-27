@@ -25,6 +25,18 @@ namespace MiniORM
 			this.allEntities = CloneEntities(entities);
         }
 
+        public IReadOnlyCollection<T> AllEntities => this.allEntities.AsReadOnly();
+
+        public IReadOnlyCollection<T> Added => this.added.AsReadOnly();
+
+        public IReadOnlyCollection<T> Removed => this.removed.AsReadOnly();
+
+
+        public void Add(T item) => this.added.Add(item);
+
+        public void Remove(T item) => this.removed.Add(item);
+
+
 		private static List<T> CloneEntities(IEnumerable<T> entities)
         {
 			List<T> clonedEntities = new List<T>();
