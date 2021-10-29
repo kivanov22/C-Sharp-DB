@@ -3,6 +3,7 @@
     using SoftUni.Data;
     using SoftUni.Models;
     using System;
+    using System.Globalization;
     using System.Linq;
     using System.Text;
 
@@ -12,7 +13,7 @@
         {
             SoftUniContext db = new SoftUniContext();
             //change only method
-            string result = AddNewAddressToEmployee(db);
+            string result = GetEmployeesInPeriod(db);
 
             Console.WriteLine(result);
 
@@ -130,9 +131,23 @@
 
                 foreach (var p in e.Projects)
                 {
+                    string startDate = p.StartDate.ToString("M/d/yyyy h:mm:ss tt", CultureInfo.GetCultureInfo("en-US"));
+                    string endDate = p.EndDate is null
+                        ? "not finished"
+                        : p.EndDate?.ToString("M/d/yyyy h:mm:ss tt", CultureInfo.GetCultureInfo("en-US"));
 
+                    sb.AppendLine($"--{p.Name} - {startDate} - {endDate}");
                 }
             }
+
+            return sb.ToString().Trim();
+        }
+
+
+        //8.	Addresses by Town
+        public static string GetAddressesByTown(SoftUniContext context)
+        {
+
         }
     }
 }
