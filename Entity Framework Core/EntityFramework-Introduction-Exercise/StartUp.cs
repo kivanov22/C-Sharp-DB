@@ -13,7 +13,7 @@
         {
             SoftUniContext db = new SoftUniContext();
             //change only method
-            string result = GetLatestProjects(db);
+            string result = RemoveTown(db);
 
             Console.WriteLine(result);
 
@@ -259,9 +259,99 @@
 
             employee.ForEach(e => e.Salary *= 1.12m);
 
+            context.SaveChanges();
+
+            StringBuilder sb = new StringBuilder();
+
+            foreach (var e in employee)
+            {
+                sb.AppendLine($"{e.FirstName} {e.LastName} (${e.Salary:f2})");
+            }
+
+            return sb.ToString().Trim();
 
         }
 
+
+        //13.	Find Employees by First Name Starting with "Sa"
+        public static string GetEmployeesByFirstNameStartingWithSa(SoftUniContext context)
+        {
+            var employees = context.Employees
+                .Where(e => e.FirstName.StartsWith("Sa"))
+                .OrderBy(e => e.FirstName)
+                .ThenBy(e => e.LastName)
+                .Select(e => new { e.FirstName, e.LastName, e.JobTitle, e.Salary })
+                .ToList();
+
+            StringBuilder sb = new StringBuilder();
+
+            foreach (var e in employees)
+            {
+                sb.AppendLine($"{e.FirstName} {e.LastName} - {e.JobTitle} - (${e.Salary:f2})");
+            }
+
+            return sb.ToString().Trim();
+        }
+
+        //14.	Delete Project by Id
+        public static string DeleteProjectById(SoftUniContext context)
+        {
+            var employeeProject = context.EmployeesProjects
+                .Where(e => e.ProjectId == 2);
+
+
+            context.EmployeesProjects.RemoveRange(employeeProject);
+
+            var project = context.Projects.Find(2);
+
+            context.Projects.Remove(project);
+
+            context.SaveChanges();
+
+            var projects = context.Projects
+            .Take(10)
+            .ToList();
+
+
+            StringBuilder sb = new StringBuilder();
+
+
+            foreach (var p in projects)
+            {
+                sb.AppendLine($"{p.Name}");
+            }
+
+            return sb.ToString().Trim();
+
+        }
+
+        //15.	Remove Town
+        public static string RemoveTown(SoftUniContext context)
+        {
+            //Seattle id is 4
+
+            var employeesOfTown = context.Employees
+                .Where(e => e.Address.Town.Name == "Seattle")
+                .ToList();
+
+            employeesOfTown.ForEach(e => e.AddressId = null);
+
+            var addresses = context.Addresses
+                .Where(e => e.Town.Name == "Seattle")
+                .ToList();
+
+            context.RemoveRange(addresses);
+
+            var towns = context.Towns
+                .FirstOrDefault(t => t.Name == "Seattle");
+
+            context.Remove(towns);
+
+            context.SaveChanges();
+
+            return $"{addresses.Count()} addresses in Seattle were deleted";
+                
+        }
     }
 }
 
