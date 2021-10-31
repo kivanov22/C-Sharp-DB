@@ -13,7 +13,7 @@
         {
             SoftUniContext db = new SoftUniContext();
             //change only method
-            string result = GetEmployeesInPeriod(db);
+            string result = GetLatestProjects(db);
 
             Console.WriteLine(result);
 
@@ -147,8 +147,121 @@
         //8.	Addresses by Town
         public static string GetAddressesByTown(SoftUniContext context)
         {
+            var addresses = context.Addresses
+                .Select(e => new { e.AddressText, townName = e.Town.Name, employeeCount = e.Employees.Count })
+                .OrderByDescending(e => e.employeeCount)
+                .ThenBy(e => e.townName)
+                .ThenBy(e => e.AddressText)
+                .Take(10)
+                .ToList();
+
+            StringBuilder sb = new StringBuilder();
+
+            foreach (var e in addresses)
+            {
+                sb.AppendLine($"{e.AddressText}, {e.townName} - {e.employeeCount} employees");
+            }
+
+            return sb.ToString().Trim();
+        }
+
+        //9.	Employee 147
+        public static string GetEmployee147(SoftUniContext context)
+        {
+            var employee = context.Employees.FirstOrDefault(e => e.EmployeeId == 147);
+
+            StringBuilder sb = new StringBuilder();
+
+            sb.AppendLine($"{employee.FirstName} {employee.LastName} - {employee.JobTitle}");
+
+            var projects = context.EmployeesProjects
+                .Where(e => e.EmployeeId == 147)
+                .Select(e => e.Project)
+                .OrderBy(e => e.Name)
+                .ToList();
+
+            foreach (var e in projects)
+            {
+                sb.AppendLine($"{e.Name}");
+            }
+
+            return sb.ToString().Trim();
+        }
+
+
+        //10.	Departments with More Than 5 Employees
+        public static string GetDepartmentsWithMoreThan5Employees(SoftUniContext context)
+        {
+            var department = context.Departments
+                .Where(e=> e.Employees.Count > 5)
+                .OrderBy(e => e.Employees.Count)
+                .ThenBy(d=>d.Name)
+                .Select(d  => new { d.Name,d.Manager,d.Employees })
+                .ToList();
+
+            StringBuilder sb = new StringBuilder();
+
+            foreach (var d in department)
+            {
+                sb.AppendLine($"{d.Name} - {d.Manager.FirstName} {d.Manager.LastName}");
+
+                var orderedEmployees = context.Employees
+                   .Select(e => new { e.FirstName, e.LastName, e.JobTitle })
+                   .OrderBy(e => e.FirstName)
+                   .ThenBy(e => e.LastName)
+                   .ToList();
+
+
+
+                foreach (var e in orderedEmployees)
+                {
+                    sb.AppendLine($"{e.FirstName} {e.LastName} - {e.JobTitle}");
+                }
+            }
+
+            return sb.ToString().Trim();
+        }
+
+        //11.	Find Latest 10 Projects
+        public static string GetLatestProjects(SoftUniContext context)
+        {
+            var projects = context.Projects
+                .Select(e => new { e.Name, e.Description, e.StartDate })
+                .OrderByDescending(e => e.StartDate)
+                .Take(10)
+                .OrderBy(e => e.Name)
+                .ToList();
+            StringBuilder sb = new StringBuilder();
+
+            foreach (var p in projects)
+            {
+                var formatDate = p.StartDate.ToString("M/d/yyyy h:mm:ss tt", CultureInfo.InvariantCulture);
+
+                sb.AppendLine($"{p.Name}");
+                sb.AppendLine($"{p.Description}");
+                sb.AppendLine($"{formatDate}");
+            }
+
+            return sb.ToString().Trim();
+        }
+
+        //12.	Increase Salaries
+        public static string IncreaseSalaries(SoftUniContext context)
+        {
+            var employee = context.Employees
+                .Where(e => e.Department.Name == "Engineering" ||
+                e.Department.Name == "Tool Design"
+                || e.Department.Name == "Marketing"
+                || e.Department.Name == "Information Services")
+                .OrderBy(e => e.FirstName)
+                .ThenBy(e => e.LastName)
+                .ToList();
+
+            employee.ForEach(e => e.Salary *= 1.12m);
+
 
         }
+
     }
 }
 
