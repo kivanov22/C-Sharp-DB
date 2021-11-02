@@ -1,8 +1,11 @@
 ﻿
 namespace P03_FootballBetting.Data.Models
 {
+    using P03_FootballBetting.Data.Models.Enums;
     using System;
     using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+
     public class Bet
     {
         [Key]
@@ -10,12 +13,18 @@ namespace P03_FootballBetting.Data.Models
 
         public decimal Amount { get; set; }
 
-        public decimal Prediction { get; set; }//?? enum or string
+        public Prediction Prediction { get; set; }//?? enum or string
 
         public DateTime DateTime { get; set; }
 
+        [ForeignKey(nameof(User))]
         public int UserId { get; set; }
 
+        public virtual User User { get; set; }
+
+        [ForeignKey(nameof(Game))]
         public int GameId { get; set; }
+
+        public virtual Game Game { get; set; }
     }
 }

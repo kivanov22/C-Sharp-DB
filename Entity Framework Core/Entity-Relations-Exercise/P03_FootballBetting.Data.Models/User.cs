@@ -1,9 +1,14 @@
 ﻿
 namespace P03_FootballBetting.Data.Models
 {
-using System.ComponentModel.DataAnnotations;
-  public  class User
+    using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
+    public class User
     {
+        public User()
+        {
+            this.Bets = new HashSet<Bet>();
+        }
         [Key]
         public int UserId { get; set; }
 
@@ -24,5 +29,7 @@ using System.ComponentModel.DataAnnotations;
         public string Name { get; set; }
 
         public decimal Balance { get; set; }
+
+        public virtual ICollection<Bet> Bets { get; set; }
     }
 }

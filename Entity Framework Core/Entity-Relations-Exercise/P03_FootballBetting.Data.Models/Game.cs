@@ -2,15 +2,30 @@
 namespace P03_FootballBetting.Data.Models
 {
     using System;
+    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+
     public class Game
     {
+        public Game()
+        {
+            this.PlayerStatistics = new HashSet<PlayerStatistic>();
+            this.Bets = new HashSet<Bet>();
+        }
+
         [Key]
         public int GameId { get; set; }
 
+        [ForeignKey(nameof(HomeTeam))]
         public int HomeTeamId { get; set; }
 
+        public virtual Team HomeTeam { get; set; }
+
+        [ForeignKey(nameof(AwayTeam))]
         public int AwayTeamId { get; set; }
+
+        public virtual Team AwayTeam { get; set; }
 
         public int HomeTeamGoals { get; set; }
 
@@ -24,6 +39,13 @@ namespace P03_FootballBetting.Data.Models
 
         public decimal DrawBetRate { get; set; }
 
-        public int Result { get; set; }//?? string
+        [Required]
+        [MaxLength(6)]
+        public string Result { get; set; }//?? string
+
+        public virtual ICollection<PlayerStatistic> PlayerStatistics { get; set; }
+        public virtual ICollection<Bet> Bets { get; set; }
+
+
     }
 }
