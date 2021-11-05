@@ -1,0 +1,13 @@
+﻿namespace MusicHub.Common
+{
+    public static class ValidationConstants
+    {
+        public const int SONG_NAME_MAX_LENGTH = 20;
+
+        public const int ALBUM_NAME_MAX_LENGTH = 40;
+
+        public const int PERFORMER_NAME_MAX_LENGTH = 20;
+
+        public const int PRODUCER_NAME_MAX_LENGTH = 30;
+    }
+}
