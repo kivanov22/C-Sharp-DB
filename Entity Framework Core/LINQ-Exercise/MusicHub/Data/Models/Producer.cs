@@ -5,6 +5,11 @@
     using System.ComponentModel.DataAnnotations;
     public class Producer
     {
+        public Producer()
+        {
+            this.Albums = new HashSet<Album>();
+        }
+
         [Key]
         public int Id { get; set; }
 

@@ -5,6 +5,11 @@
     using System.ComponentModel.DataAnnotations;
     public class Performer
     {
+        public Performer()
+        {
+            this.PerformerSongs = new HashSet<SongPerformer>();
+        }
+
         [Key]
         public int Id { get; set; }
         [Required]
@@ -19,6 +24,6 @@
 
         public decimal NetWorth { get; set; }
 
-        public virtual ICollection<Performer> SongPerformer { get; set; }
+        public virtual ICollection<SongPerformer> PerformerSongs { get; set; }
     }
 }

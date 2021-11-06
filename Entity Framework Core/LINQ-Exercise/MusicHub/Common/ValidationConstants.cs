@@ -9,5 +9,9 @@
         public const int PERFORMER_NAME_MAX_LENGTH = 20;
 
         public const int PRODUCER_NAME_MAX_LENGTH = 30;
+        
+        public const int WRITER_NAME_MAX_LENGTH = 20;
+
+
     }
 }
