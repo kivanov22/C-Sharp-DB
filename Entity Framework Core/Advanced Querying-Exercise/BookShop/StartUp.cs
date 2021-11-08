@@ -15,8 +15,9 @@
             DbInitializer.ResetDatabase(db);
 
             //string ageRestriction = Console.ReadLine();
-            string date = "R";
-            string result = GetBooksByAuthor(db, date);
+            //string date = "R";
+            int num = 12;
+            int result = CountBooks(db, num);
 
             Console.WriteLine(result);
         }
@@ -229,6 +230,16 @@
             }
 
             return sb.ToString().Trim();
+        }
+
+        //11. Count Books
+        public static int CountBooks(BookShopContext context, int lengthCheck)
+        {
+      
+             int  result = context.Books
+                .Where(e => e.Title.Length > lengthCheck).Count();
+
+            return result;
         }
     }
 }
