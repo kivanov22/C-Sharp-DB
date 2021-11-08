@@ -15,8 +15,8 @@
             DbInitializer.ResetDatabase(db);
 
             //string ageRestriction = Console.ReadLine();
-
-            string result = GetBooksByPrice(db);
+            int year = 2000;
+            string result = GetBooksNotReleasedIn(db,year);
 
             Console.WriteLine(result);
         }
@@ -87,6 +87,26 @@
 
             return sb.ToString().Trim();
         }
+
+        //5. Not Released In
+        public static string GetBooksNotReleasedIn(BookShopContext context, int year)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            var books = context.Books
+                .Where(b => b.ReleaseDate.Value.Year != year)
+                .OrderBy(i => i.BookId)
+                .Select(b => b.Title)
+                .ToArray();
+
+            foreach (var b in books)
+            {
+                sb.AppendLine(b);
+            }
+            return sb.ToString().Trim();
+        }
+
+        //6. Book Titles by Category
 
     }
 }
