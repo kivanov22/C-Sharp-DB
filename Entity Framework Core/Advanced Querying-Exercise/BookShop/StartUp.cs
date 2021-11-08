@@ -17,7 +17,7 @@
             //string ageRestriction = Console.ReadLine();
             //string date = "R";
             //int num = 12;
-            string result = GetTotalProfitByCategory(db);
+            string result = GetMostRecentBooks(db);
 
             Console.WriteLine(result);
         }
@@ -293,6 +293,47 @@
 
             return sb.ToString().Trim();
         }
+
+        //14. Most Recent Books
+        public static string GetMostRecentBooks(BookShopContext context)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            var recentBooks = context.Categories
+                .OrderBy(n=>n.Name)
+                .Select(e => new
+                {
+                    CategoryName =e.Name,
+                    Books = e.CategoryBooks.Select(b => new
+                    {
+                        BookTitle = b.Book.Title,
+                        BookRelase = b.Book.ReleaseDate,
+                        BookRelaseDate = b.Book.ReleaseDate.Value.Year,
+
+                    })
+                .OrderByDescending(d => d.BookRelase)
+                .Take(3)
+               .ToArray()
+                })
+                .ToArray();
+
+
+            foreach (var c in recentBooks)
+            {
+                sb.AppendLine($"--{c.CategoryName}");
+
+                foreach (var b in c.Books)
+                {
+                    sb.AppendLine($"{b.BookTitle} ({b.BookRelaseDate})");
+                }
+            }
+
+            return sb.ToString().Trim();
+        }
+
+        //15. Increase Prices
+
+        //16. Remove Books
 
     }
 }
