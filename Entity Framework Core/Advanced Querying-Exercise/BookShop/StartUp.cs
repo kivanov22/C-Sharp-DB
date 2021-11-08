@@ -15,8 +15,8 @@
             DbInitializer.ResetDatabase(db);
 
             //string ageRestriction = Console.ReadLine();
-            string date = "sK";
-            string result = GetBookTitlesContaining(db, date);
+            string date = "R";
+            string result = GetBooksByAuthor(db, date);
 
             Console.WriteLine(result);
         }
@@ -200,6 +200,32 @@
             foreach (var a in books)
             {
                 sb.AppendLine($"{a.BookName}");
+            }
+
+            return sb.ToString().Trim();
+        }
+
+        //10. Book Search by Author
+        public static string GetBooksByAuthor(BookShopContext context, string input)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            var books = context.Books
+                .Where(e => e.Author.LastName.StartsWith(input))
+                .OrderBy(a => a.BookId)
+                .Select(u => new
+                {
+                    BookName = u.Title,
+                    u.Author.FirstName,
+                    u.Author.LastName
+                })
+                .ToArray();
+                
+
+
+            foreach (var a in books)
+            {
+                sb.AppendLine($"{a.BookName} ({a.FirstName} {a.LastName})");
             }
 
             return sb.ToString().Trim();
