@@ -15,8 +15,8 @@
             DbInitializer.ResetDatabase(db);
 
             //string ageRestriction = Console.ReadLine();
-            string date= "12-04-1992";
-            string result = GetBooksReleasedBefore(db, date);
+            string date = "e";
+            string result = GetAuthorNamesEndingIn(db, date);
 
             Console.WriteLine(result);
         }
@@ -160,5 +160,31 @@
             return sb.ToString().Trim();
                
         }
+
+        //8. Author Search
+        public static string GetAuthorNamesEndingIn(BookShopContext context, string input)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            var authors = context.Authors
+                .Where(e => e.FirstName.EndsWith(input))
+                .OrderBy(e => e.FirstName)
+                .Select(a => new
+                {
+                    a.FirstName,
+                    a.LastName
+                })
+                .ToArray();
+
+
+            foreach (var a in authors)
+            {
+                sb.AppendLine($"{a.FirstName} {a.LastName}");
+            }
+
+            return sb.ToString().Trim();
+        }
+
+        //9. Book Search
     }
 }
