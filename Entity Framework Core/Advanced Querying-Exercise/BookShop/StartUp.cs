@@ -16,8 +16,8 @@
 
             //string ageRestriction = Console.ReadLine();
             //string date = "R";
-            int num = 12;
-            int result = CountBooks(db, num);
+            //int num = 12;
+            string result = GetTotalProfitByCategory(db);
 
             Console.WriteLine(result);
         }
@@ -241,5 +241,58 @@
 
             return result;
         }
+
+        //12. Total Book Copies
+        public static string CountCopiesByAuthor(BookShopContext context)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            var booksCopies = context.Authors
+                .Select(e => new
+                {
+                    AuthorName = e.FirstName + " " + e.LastName,
+                    Copies = e.Books.Where(a => a.AuthorId == a.Author.AuthorId)
+                   .Select(d => d.Copies).Sum()
+
+                })
+                .OrderByDescending(d=>d.Copies)
+               .ToArray();
+
+
+            foreach (var a in booksCopies)
+            {
+                sb.AppendLine($"{a.AuthorName} - {a.Copies}");
+            }
+
+            return sb.ToString().Trim();
+
+        }
+
+        //13. Profit by Category
+        public static string GetTotalProfitByCategory(BookShopContext context)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            var booksProfit = context.Categories
+                .Select(e => new
+                {
+                    CategoryName = e.Name,
+                    Profit = e.CategoryBooks.Where(e=>e.CategoryId == e.Category.CategoryId)
+                   .Select(d => d.Book.Copies * d.Book.Price).Sum()
+
+                })
+                .OrderByDescending(d => d.Profit)
+                .ThenBy(c=>c.CategoryName)
+               .ToArray();
+
+
+            foreach (var a in booksProfit)
+            {
+                sb.AppendLine($"{a.CategoryName} - ${a.Profit:f2}");
+            }
+
+            return sb.ToString().Trim();
+        }
+
     }
 }
