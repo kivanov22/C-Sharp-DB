@@ -15,8 +15,8 @@
             DbInitializer.ResetDatabase(db);
 
             //string ageRestriction = Console.ReadLine();
-            int year = 2000;
-            string result = GetBooksNotReleasedIn(db,year);
+            string category= "horror mystery drama";
+            string result = GetBooksByCategory(db, category);
 
             Console.WriteLine(result);
         }
@@ -107,6 +107,33 @@
         }
 
         //6. Book Titles by Category
+        public static string GetBooksByCategory(BookShopContext context, string input)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            string[] formatedCategories = input.Split(" ",StringSplitOptions.RemoveEmptyEntries);
+
+
+            var books = context.BooksCategories
+                .Select(b => new
+                {
+                    BookTitle =b.Book.Title,
+                    CategoryName = b.Category.Name
+                })
+                .OrderBy(b => b.BookTitle)
+                .ToArray();
+               
+
+            foreach (var b in books)
+            {
+                if (formatedCategories.Contains(b.CategoryName.ToLower()))
+                {
+                sb.AppendLine(b.BookTitle);
+                }
+            }
+            return sb.ToString().Trim();
+        }
+
 
     }
 }
