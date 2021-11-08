@@ -15,8 +15,8 @@
             DbInitializer.ResetDatabase(db);
 
             //string ageRestriction = Console.ReadLine();
-            string date = "e";
-            string result = GetAuthorNamesEndingIn(db, date);
+            string date = "sK";
+            string result = GetBookTitlesContaining(db, date);
 
             Console.WriteLine(result);
         }
@@ -186,5 +186,23 @@
         }
 
         //9. Book Search
+        public static string GetBookTitlesContaining(BookShopContext context, string input)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            var books = context.Books
+                .Where(b=>b.Title.Contains(input))
+                .OrderBy(e=>e.Title)
+                .Select(e=>new { BookName = e.Title })
+                .ToArray();
+
+
+            foreach (var a in books)
+            {
+                sb.AppendLine($"{a.BookName}");
+            }
+
+            return sb.ToString().Trim();
+        }
     }
 }
