@@ -2,6 +2,6 @@
 {
     public static class Configuration
     {
-        public const string ConnectionString = @"Server=DESKTOP-M28UK1S\SQLEXPRESS;Integrated Security=true;Database=Bet365";
+        public const string ConnectionString = @"Server=.;Integrated Security=true;Database=Bet365";
     }
 }
