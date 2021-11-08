@@ -15,8 +15,8 @@
             DbInitializer.ResetDatabase(db);
 
             //string ageRestriction = Console.ReadLine();
-            string category= "horror mystery drama";
-            string result = GetBooksByCategory(db, category);
+            string date= "12-04-1992";
+            string result = GetBooksReleasedBefore(db, date);
 
             Console.WriteLine(result);
         }
@@ -134,6 +134,31 @@
             return sb.ToString().Trim();
         }
 
+        //7. Released Before Date
+        public static string GetBooksReleasedBefore(BookShopContext context, string date)
+        {
+            StringBuilder sb = new StringBuilder();
 
+            DateTime givenDate = DateTime.Parse(date);
+
+            var books = context.Books
+                 .OrderByDescending(d => d.ReleaseDate)
+                .Where(b => b.ReleaseDate < givenDate)
+                .Select(e => new
+                {
+                    BookName = e.Title,
+                    EditionType = e.EditionType,
+                    Price = e.Price
+                })
+                .ToArray();
+
+            foreach (var b in books)
+            {
+                sb.AppendLine($"{b.BookName} - {b.EditionType} - ${b.Price}");
+            }
+
+            return sb.ToString().Trim();
+               
+        }
     }
 }
