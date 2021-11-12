@@ -1,18 +1,16 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-
 namespace FastFood.Core
 {
+    using Microsoft.AspNetCore.Builder;
+    using Microsoft.AspNetCore.Hosting;
+    using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.Hosting;
+    using AutoMapper;
     using Data;
+    using FastFood.Services;
+
     using Microsoft.EntityFrameworkCore;
+    using FastFood.Services.Interfaces;
 
     public class Startup
     {
@@ -31,6 +29,12 @@ namespace FastFood.Core
                     Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddControllersWithViews();
+
+            //Register AutoMapper
+            services.AddAutoMapper(typeof(Startup));
+
+            //configure custom services
+            services.AddTransient<ICategoryService, CategoryService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
