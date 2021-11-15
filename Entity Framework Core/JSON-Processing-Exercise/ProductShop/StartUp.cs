@@ -57,6 +57,22 @@ namespace ProductShop
            return $"Successfully imported {mappedProducts.Count()}";
         }
 
+        //Query 4. Import Categories
+        public static string ImportCategories(ProductShopContext context, string inputJson)
+        {
+            //clear nulls
+            IEnumerable<CategoryInputDto> categories = JsonConvert.DeserializeObject<IEnumerable<CategoryInputDto>>(inputJson)
+                .Where(x=>!string.IsNullOrEmpty(x.Name));
+
+            InitializeMapper();
+
+            var mappedCategories = mapper.Map<IEnumerable<Category>>(categories);
+            context.Categories.AddRange(mappedCategories);
+            context.SaveChanges();
+
+            return $"Successfully imported {mappedCategories.Count()}";
+        }
+
         private static void InitializeMapper()
         {
             var mapperConfiguration = new MapperConfiguration(cfg =>
