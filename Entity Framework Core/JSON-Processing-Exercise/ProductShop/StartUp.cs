@@ -12,6 +12,8 @@ namespace ProductShop
 {
     public class StartUp
     {
+
+        private static IMapper mapper;
         public static void Main(string[] args)
         {
             var context = new ProductShopContext();
@@ -19,6 +21,7 @@ namespace ProductShop
             context.Database.EnsureCreated();
 
             var usersAsJson = File.ReadAllText("../../../Datasets/users.json");
+            var productsAsJson = File.ReadAllText("../../../Datasets/products.json");
         }
 
         //Query 2. Import Users
@@ -26,14 +29,9 @@ namespace ProductShop
         {
             IEnumerable<UserInputDto> users = JsonConvert.DeserializeObject<IEnumerable<UserInputDto>>(inputJson);
 
-            var mapperConfiguration = new MapperConfiguration(cfg =>
-            {
-                cfg.AddProfile<ProductShopProfile>();
-            });
+            InitializeMapper();//our method for mapping
 
-            IMapper mapper = new Mapper(mapperConfiguration);
-
-            IEnumerable<User> mappedUsers = mapper.Map<IEnumerable<User>>(users); 
+            var mappedUsers = mapper.Map<IEnumerable<User>>(users); 
 
 
             //IEnumerable<User> mappedUsers =  users.Select(x=>x.MapToDomainUser()).ToList(); if we use the static mapping
@@ -43,9 +41,31 @@ namespace ProductShop
             context.SaveChanges();
 
             return $"Successfully imported {mappedUsers.Count()}";
-        }       
+        }
 
+        //Query 3. Import Products
+        public static string ImportProducts(ProductShopContext context, string inputJson)
+        {
+            IEnumerable<ProductInputDto> products = JsonConvert.DeserializeObject<IEnumerable<ProductInputDto>>(inputJson);
 
+            InitializeMapper();
+
+            var mappedProducts = mapper.Map<IEnumerable<Product>>(products);
+            context.Products.AddRange(mappedProducts);
+            context.SaveChanges();
+
+           return $"Successfully imported {mappedProducts.Count()}";
+        }
+
+        private static void InitializeMapper()
+        {
+            var mapperConfiguration = new MapperConfiguration(cfg =>
+            {
+                cfg.AddProfile<ProductShopProfile>();
+            });
+
+           mapper = new Mapper(mapperConfiguration);
+        }
 
     }
     //public static class UserMappings
