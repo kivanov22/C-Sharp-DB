@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using AutoMapper;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using ProductShop.Data;
 using ProductShop.Dtos.Input;
 using ProductShop.Models;
@@ -20,8 +21,10 @@ namespace ProductShop
             context.Database.EnsureDeleted();
             context.Database.EnsureCreated();
 
-            var usersAsJson = File.ReadAllText("../../../Datasets/users.json");
-            var productsAsJson = File.ReadAllText("../../../Datasets/products.json");
+            //var usersAsJson = File.ReadAllText("../../../Datasets/users.json");
+            //var productsAsJson = File.ReadAllText("../../../Datasets/products.json");
+
+            Console.WriteLine(GetProductsInRange(context));
         }
 
         //Query 2. Import Users
@@ -85,6 +88,37 @@ namespace ProductShop
 
             return $"Successfully imported {mappedCategoriesProducts.Count()}";
         }
+
+        //Export Products in Range
+        public static string GetProductsInRange(ProductShopContext context)
+        {
+            var products = context.Products
+                .Where(x => x.Price >= 500 && x.Price <= 1000)
+                .OrderBy(x => x.Price)
+                .Select(x => new
+                {
+                    Name = x.Name,
+                    Price = x.Price,
+                    Seller = $"{x.Seller.FirstName} {x.Seller.LastName}",
+                })
+                .ToArray();
+
+            DefaultContractResolver contractResolver = new DefaultContractResolver
+            {
+                NamingStrategy = new CamelCaseNamingStrategy()
+            };
+
+            var jsonSettings = new JsonSerializerSettings
+            {
+                Formatting = Formatting.Indented,
+                ContractResolver= contractResolver
+            };
+
+            string productsAsJson = JsonConvert.SerializeObject(products,jsonSettings);
+
+             return productsAsJson;
+        }
+
         private static void InitializeMapper()
         {
             var mapperConfiguration = new MapperConfiguration(cfg =>
