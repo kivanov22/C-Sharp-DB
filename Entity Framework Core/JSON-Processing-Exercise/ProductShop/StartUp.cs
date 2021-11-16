@@ -24,7 +24,7 @@ namespace ProductShop
             //var usersAsJson = File.ReadAllText("../../../Datasets/users.json");
             //var productsAsJson = File.ReadAllText("../../../Datasets/products.json");
 
-            Console.WriteLine(GetCategoriesByProductsCount(context));
+            Console.WriteLine(GetUsersWithProducts(context));
         }
 
         //Query 2. Import Users
@@ -188,6 +188,54 @@ namespace ProductShop
             string categoriesByProducts = JsonConvert.SerializeObject(categories, jsonSettings);
               return categoriesByProducts;
         }
+
+        //Query 7. Export Users and Products
+        public static string GetUsersWithProducts(ProductShopContext context)
+        {
+            var result = context.Users
+                .Where(x => x.ProductsSold.Any(b => b.Buyer != null))
+                .OrderByDescending(d => d.ProductsSold.Count)
+                .Select(x => new
+                {
+                    FirstName = x.FirstName,
+                    LastName = x.LastName,
+                    Age = x.Age,
+
+
+                    SoldProducts = x.ProductsSold.Select(f => new
+                    {
+                        Count = x.ProductsSold.Count(),
+
+                        Products = x.ProductsSold.Select(p => new
+                        {
+                            Name = p.Name,
+                            Price = p.Price
+                        })
+                    })
+                }).ToList();
+
+            DefaultContractResolver contractResolver = new DefaultContractResolver
+            {
+                NamingStrategy = new CamelCaseNamingStrategy()
+            };
+
+            var jsonSettings = new JsonSerializerSettings
+            {
+                Formatting = Formatting.Indented,
+                ContractResolver = contractResolver,
+                NullValueHandling = NullValueHandling.Ignore//handle nulls
+            };
+
+            var resultWithCount = new
+            {
+                usersCount = result.Count,
+                result
+            };
+
+            string usersWithProducts = JsonConvert.SerializeObject(resultWithCount, jsonSettings);
+            return usersWithProducts;
+        }
+
 
         private static void InitializeMapper()
         {
