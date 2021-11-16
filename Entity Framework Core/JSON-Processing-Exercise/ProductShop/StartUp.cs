@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
@@ -25,7 +24,7 @@ namespace ProductShop
             //var usersAsJson = File.ReadAllText("../../../Datasets/users.json");
             //var productsAsJson = File.ReadAllText("../../../Datasets/products.json");
 
-            Console.WriteLine(GetSoldProducts(context));
+            Console.WriteLine(GetCategoriesByProductsCount(context));
         }
 
         //Query 2. Import Users
@@ -90,7 +89,7 @@ namespace ProductShop
             return $"Successfully imported {mappedCategoriesProducts.Count()}";
         }
 
-        //Export Products in Range
+        //Export 5. Products in Range
         public static string GetProductsInRange(ProductShopContext context)
         {
             var products = context.Products
@@ -159,6 +158,35 @@ namespace ProductShop
             string soldProductsAsJson = JsonConvert.SerializeObject(soldProducts, jsonSettings);
 
             return soldProductsAsJson;
+        }
+
+        //Export 7. Categories by Products Count
+        public static string GetCategoriesByProductsCount(ProductShopContext context)
+        {
+            var categories = context
+                .Categories
+                .OrderByDescending(c=>c.CategoryProducts.Count)
+                .Select(x => new
+                {
+                    Category = x.Name,
+                    ProductsCount = x.CategoryProducts.Count,
+                    AveragePrice = $"{x.CategoryProducts.Sum(p => p.Product.Price) / x.CategoryProducts.Count:f2}",
+                    TotalRevenue = $"{x.CategoryProducts.Sum(p => p.Product.Price):f2}"
+                }).ToList();
+
+            DefaultContractResolver contractResolver = new DefaultContractResolver
+            {
+                NamingStrategy = new CamelCaseNamingStrategy()
+            };
+
+            var jsonSettings = new JsonSerializerSettings
+            {
+                Formatting = Formatting.Indented,
+                ContractResolver = contractResolver
+            };
+
+            string categoriesByProducts = JsonConvert.SerializeObject(categories, jsonSettings);
+              return categoriesByProducts;
         }
 
         private static void InitializeMapper()
