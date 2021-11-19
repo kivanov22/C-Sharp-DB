@@ -174,6 +174,29 @@
             return json;
         }
 
+        //Query 14. Export Local Suppliers
+        public static string GetLocalSuppliers(CarDealerContext context)
+        {
+            var suppliers = context.Suppliers
+                .Where(s => s.IsImporter == false)
+                .Select(x => new
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    PartsCount = x.Parts.Count
+                })
+                .ToList();
+
+            var jsonSettings = new JsonSerializerSettings()
+            {
+                Formatting = Formatting.Indented
+            };
+
+            var json = JsonConvert.SerializeObject(suppliers, jsonSettings);
+
+            return json;
+        }
+
         private static void InitializeMapper()
         {
             var mapperConfiguration = new MapperConfiguration(cfg =>
