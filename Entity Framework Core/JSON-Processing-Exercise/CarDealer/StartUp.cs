@@ -17,10 +17,10 @@
         public static void Main(string[] args)
         {
             CarDealerContext context = new CarDealerContext();
-            context.Database.EnsureDeleted();
-            context.Database.EnsureCreated();
+            //context.Database.EnsureDeleted();
+            //context.Database.EnsureCreated();
 
-         
+            Console.WriteLine(GetOrderedCustomers(context));
             //Console.WriteLine(ImportSuppliers(context));
         }
 
@@ -116,6 +116,32 @@
             context.SaveChanges();
 
             return $"Successfully imported {sales.Count()}.";
+        }
+
+
+        //Query 13. Export Ordered Customers
+        public static string GetOrderedCustomers(CarDealerContext context)
+        {
+            var customers = context.Customers
+                .Select(c => new
+                {
+                    Name = c.Name,
+                    BirthDate = c.BirthDate,
+                    IsYoungDriver=c.IsYoungDriver
+                })
+                .OrderBy(b=>b.BirthDate)
+                .ThenBy(y=>y.IsYoungDriver)
+                .ToList();
+
+            var jsonSettings = new JsonSerializerSettings()
+            {
+                DateFormatString="dd/MM/yyyy",
+                Formatting=Formatting.Indented
+            };
+
+            var json = JsonConvert.SerializeObject(customers, jsonSettings);
+
+            return json;
         }
 
         private static void InitializeMapper()
