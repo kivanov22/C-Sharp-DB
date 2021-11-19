@@ -20,7 +20,7 @@
             context.Database.EnsureDeleted();
             context.Database.EnsureCreated();
 
-
+         
             //Console.WriteLine(ImportSuppliers(context));
         }
 
@@ -39,6 +39,73 @@
             return $"Successfully imported {mappedSuppliers.Count()}.";
         }
 
+        //Query 9. Import Parts
+        public static string ImportParts(CarDealerContext context, string inputJson)
+        {
+            var supplierId = context.Suppliers.Select(x => x.Id).ToArray();
+
+            var parts = JsonConvert.DeserializeObject<IEnumerable<Part>>(inputJson)
+                .Where(s => supplierId.Contains(s.SupplierId))
+                .ToList();
+
+
+            //IEnumerable<PartDto> parts = JsonConvert.DeserializeObject<IEnumerable<PartDto>>(inputJson);//??check
+
+            //InitializeMapper();
+
+            //var mappedParts = mapper.Map<IEnumerable<Part>>(parts).Where(p => p.Id != p.Supplier.);
+
+            context.AddRange(parts);
+            context.SaveChanges();
+
+
+            return $"Successfully imported {parts.Count()}.";
+        }
+
+        //Query 10. Import Cars
+        public static string ImportCars(CarDealerContext context, string inputJson)
+        {
+            IEnumerable<CarDto> input = JsonConvert.DeserializeObject<IEnumerable<CarDto>>(inputJson);
+
+            List<Car> cars = new List<Car>();
+
+            foreach (var currentCar in input)
+            {
+                Car car = new Car()
+                {
+                    Make = currentCar.Make,
+                    Model = currentCar.Model,
+                    TravelledDistance = currentCar.TravelledDistance
+                };
+
+                foreach (var partId in currentCar.PartsId.Distinct())
+                {
+                    car.PartCars.Add(new PartCar()
+                    {
+                        Car = car,
+                        PartId=partId
+                    });
+                }
+                cars.Add(car);
+            }
+
+            context.Cars.AddRange(cars);
+            context.SaveChanges();
+
+            return $"Successfully imported {cars.Count}.";
+        }
+
+
+        //Query 11. Import Customers
+        public static string ImportCustomers(CarDealerContext context, string inputJson)
+        {
+            var customers = JsonConvert.DeserializeObject<IEnumerable<Customer>>(inputJson);
+
+            context.Customers.AddRange(customers);
+            context.SaveChanges();
+
+           return $"Successfully imported {customers.Count()}.";
+        }
 
         private static void InitializeMapper()
         {
