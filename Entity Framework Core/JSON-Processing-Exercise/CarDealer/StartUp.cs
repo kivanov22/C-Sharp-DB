@@ -20,7 +20,11 @@
             //context.Database.EnsureDeleted();
             //context.Database.EnsureCreated();
 
-            Console.WriteLine(GetOrderedCustomers(context));
+
+            //var customersJson = File.ReadAllText("Datasets/customers.json");
+            //Console.WriteLine(ImportCustomers(context, customersJson));
+
+            Console.WriteLine(GetCarsFromMakeToyota(context));
             //Console.WriteLine(ImportSuppliers(context));
         }
 
@@ -140,6 +144,32 @@
             };
 
             var json = JsonConvert.SerializeObject(customers, jsonSettings);
+
+            return json;
+        }
+
+        //Export 15.Cars from Make Toyota
+        public static string GetCarsFromMakeToyota(CarDealerContext context)
+        {
+            var carModels = context.Cars
+                .Where(m=>m.Make=="Toyota")
+                .Select(c => new
+                {
+                    Id = c.Id,
+                    Make = c.Make,
+                    Model = c.Model,
+                    TravelledDistance = c.TravelledDistance
+                })
+                .OrderBy(m => m.Model)
+                .ThenByDescending(d => d.TravelledDistance)
+                .ToList();
+
+            var jsonSettings = new JsonSerializerSettings()
+            {
+                Formatting = Formatting.Indented
+            };
+
+            var json = JsonConvert.SerializeObject(carModels, jsonSettings);
 
             return json;
         }
