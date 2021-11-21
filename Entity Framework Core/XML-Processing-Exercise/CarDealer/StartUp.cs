@@ -19,8 +19,8 @@ namespace CarDealer
             //ResetDb(db);
 
             //      or ../../../
-            string inputXml = File.ReadAllText("./Datasets/suppliers.xml");
-            string result = ImportSuppliers(db, inputXml);
+            string inputXml = File.ReadAllText("./Datasets/parts.xml");
+            string result = ImportParts(db, inputXml);
             Console.WriteLine(result);
         }
 
@@ -51,6 +51,50 @@ namespace CarDealer
             context.SaveChanges();
 
             return $"Successfully imported {suppliers.Count}";
+        }
+
+
+        //Query 10. Import Parts
+        public static string ImportParts(CarDealerContext context, string inputXml)
+        {
+            XmlRootAttribute xmlRoot = new XmlRootAttribute("Parts");
+
+            XmlSerializer xmlSerializer = new XmlSerializer(typeof(ImportPartDto[]), xmlRoot);
+
+            using StringReader stringReader = new StringReader(inputXml);
+
+            ImportPartDto[] partDtos = (ImportPartDto[])xmlSerializer.Deserialize(stringReader);
+
+            ICollection<Part> parts = new HashSet<Part>();
+
+            foreach (var partDto in partDtos)
+            {
+                //check for supplier if it has id
+                Supplier supplier = context.Suppliers.Find(partDto.SupplierId);
+
+
+                //if not we continue
+                if (supplier==null)
+                {
+                    continue;
+                }
+
+                //create a new part and use the supplier if it exists
+                Part p = new Part()
+                {
+                    Name = partDto.Name,
+                    Price = decimal.Parse(partDto.Price),
+                    Quantity = partDto.Quantity,
+                    Supplier = supplier
+                };
+
+                parts.Add(p);
+            }
+
+            context.Parts.AddRange(parts);
+            context.SaveChanges();
+
+            return $"Successfully imported {parts.Count}";
         }
 
 
