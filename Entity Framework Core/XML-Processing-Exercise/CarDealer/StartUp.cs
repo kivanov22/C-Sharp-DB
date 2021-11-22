@@ -29,7 +29,7 @@ namespace CarDealer
             // Console.WriteLine(result);
 
             //Exports
-            string result = GetCarsWithTheirListOfParts(db);
+            string result = GetTotalSalesByCustomer(db);
             Console.WriteLine(result);
         }
 
@@ -332,6 +332,35 @@ namespace CarDealer
                 .ToArray();
 
             xmlSerializer.Serialize(stringWriter, carPartsDtos, namespaces);
+
+            return sb.ToString().Trim();
+        }
+
+
+        //Query 18. Total Sales by Customer
+        public static string GetTotalSalesByCustomer(CarDealerContext context)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            using StringWriter stringWriter = new StringWriter(sb);
+
+            XmlSerializer xmlSerializer = GenerateSerializer("customers", typeof(ExportTotalSaleByCustomerDto[]));
+
+            XmlSerializerNamespaces namespaces = new XmlSerializerNamespaces();
+            namespaces.Add(String.Empty, String.Empty);
+
+            ExportTotalSaleByCustomerDto[] salesCustomerDto = context.Customers
+                .Where(c=>c.Sales.Any())
+                .Select(x => new ExportTotalSaleByCustomerDto
+                {
+                    FullName=x.Name,
+                    BoughtCars=x.Sales.Count,
+                    SpentMoney=x.Sales.SelectMany(s=>s.Car.PartCars).Sum(c=>c.Part.Price)
+                })
+                .OrderByDescending(d=>d.SpentMoney)
+                .ToArray();
+
+            xmlSerializer.Serialize(stringWriter, salesCustomerDto, namespaces);
 
             return sb.ToString().Trim();
         }
