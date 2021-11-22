@@ -29,7 +29,7 @@ namespace CarDealer
             // Console.WriteLine(result);
 
             //Exports
-            string result = GetLocalSuppliers(db);
+            string result = GetCarsWithTheirListOfParts(db);
             Console.WriteLine(result);
         }
 
@@ -83,7 +83,7 @@ namespace CarDealer
 
 
                 //if not we continue
-                if (supplier==null)
+                if (supplier == null)
                 {
                     continue;
                 }
@@ -120,7 +120,7 @@ namespace CarDealer
 
             foreach (var carDto in importCarDtos)
             {
-                
+
                 Car car = new Car
                 {
                     Make = carDto.Make,
@@ -131,7 +131,7 @@ namespace CarDealer
                 ICollection<PartCar> currentCarParts = new HashSet<PartCar>();
 
                 //check for unique id-s
-                foreach (int partId in carDto.Parts.Select(p=>p.Id).Distinct())
+                foreach (int partId in carDto.Parts.Select(p => p.Id).Distinct())
                 {
                     Part part = context
                         .Parts
@@ -201,17 +201,17 @@ namespace CarDealer
                 .Where(sd => context.Cars.Any(c => c.Id == sd.CarId))
                 .Select(x => new Sale()
                 {
-                    CarId=x.CarId,
-                    CustomerId=x.CustomerId,
-                    Discount=x.Discount
+                    CarId = x.CarId,
+                    CustomerId = x.CustomerId,
+                    Discount = x.Discount
                 })
                 .ToList();
 
-           
+
             context.Sales.AddRange(sales);
             context.SaveChanges();
 
-            return  $"Successfully imported {sales.Count}";
+            return $"Successfully imported {sales.Count}";
         }
 
         //Query 14. Cars With Distance
@@ -233,13 +233,13 @@ namespace CarDealer
                 .Take(10)
                 .Select(c => new ExportCarWithDistanceDto()
                 {
-                    Make=c.Make,
-                    Model=c.Model,
-                    TravelledDistance=c.TravelledDistance.ToString()//its long so we give it ToString
+                    Make = c.Make,
+                    Model = c.Model,
+                    TravelledDistance = c.TravelledDistance.ToString()//its long so we give it ToString
                 })
                 .ToArray();
 
-            xmlSerializer.Serialize(stringWriter, carsDtos,namespaces);
+            xmlSerializer.Serialize(stringWriter, carsDtos, namespaces);
 
             return sb.ToString().Trim();
         }
@@ -262,9 +262,9 @@ namespace CarDealer
                 .ThenByDescending(d => d.TravelledDistance)
                 .Select(x => new ExportCarFromMakeDto()
                 {
-                    Id =x.Id,
-                    Model=x.Model,
-                    TravelledDistance=x.TravelledDistance.ToString()
+                    Id = x.Id,
+                    Model = x.Model,
+                    TravelledDistance = x.TravelledDistance.ToString()
                 })
                 .ToArray();
 
@@ -286,7 +286,7 @@ namespace CarDealer
             namespaces.Add(String.Empty, String.Empty);
 
             ExportSupplierDto[] supplierDtos = context.Suppliers
-                .Where(m => !m.IsImporter)
+                .Where(m => m.IsImporter == false)
                 .Select(x => new ExportSupplierDto()
                 {
                     Id = x.Id,
@@ -300,8 +300,43 @@ namespace CarDealer
             return sb.ToString().Trim();
         }
 
+        //Query 17. Cars with Their List of Parts
+        public static string GetCarsWithTheirListOfParts(CarDealerContext context)
+        {
+            StringBuilder sb = new StringBuilder();
 
-        private static XmlSerializer GenerateSerializer(string rootName , Type dtoType)
+            using StringWriter stringWriter = new StringWriter(sb);
+
+            XmlSerializer xmlSerializer = GenerateSerializer("cars", typeof(ExportCarWithListOfPartDto[]));
+
+            XmlSerializerNamespaces namespaces = new XmlSerializerNamespaces();
+            namespaces.Add(String.Empty, String.Empty);
+
+            ExportCarWithListOfPartDto[] carPartsDtos = context.Cars
+                .Select(x => new ExportCarWithListOfPartDto
+                {
+                    Make = x.Make,
+                    Model = x.Model,
+                    TravelledDistance = x.TravelledDistance,
+                    Parts = x.PartCars.Select(p => new ExportPartDto
+                    {
+                        Name = p.Part.Name,
+                        Price = p.Part.Price
+                    })
+                    .OrderByDescending(p => p.Price)
+                    .ToArray()
+                })
+                .OrderByDescending(d => d.TravelledDistance)
+                .ThenBy(m => m.Model)
+                .Take(5)
+                .ToArray();
+
+            xmlSerializer.Serialize(stringWriter, carPartsDtos, namespaces);
+
+            return sb.ToString().Trim();
+        }
+
+        private static XmlSerializer GenerateSerializer(string rootName, Type dtoType)
         {
             XmlRootAttribute xmlRoot = new XmlRootAttribute(rootName);
 
