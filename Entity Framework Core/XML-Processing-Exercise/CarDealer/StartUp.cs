@@ -29,7 +29,7 @@ namespace CarDealer
             // Console.WriteLine(result);
 
             //Exports
-            string result = GetCarsFromMakeBmw(db);
+            string result = GetLocalSuppliers(db);
             Console.WriteLine(result);
         }
 
@@ -273,6 +273,32 @@ namespace CarDealer
             return sb.ToString().Trim();
         }
 
+        //Query 16. Local Suppliers
+        public static string GetLocalSuppliers(CarDealerContext context)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            using StringWriter stringWriter = new StringWriter(sb);
+
+            XmlSerializer xmlSerializer = GenerateSerializer("suppliers", typeof(ExportSupplierDto[]));
+
+            XmlSerializerNamespaces namespaces = new XmlSerializerNamespaces();
+            namespaces.Add(String.Empty, String.Empty);
+
+            ExportSupplierDto[] supplierDtos = context.Suppliers
+                .Where(m => !m.IsImporter)
+                .Select(x => new ExportSupplierDto()
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    PartsCount = x.Parts.Count
+                })
+                .ToArray();
+
+            xmlSerializer.Serialize(stringWriter, supplierDtos, namespaces);
+
+            return sb.ToString().Trim();
+        }
 
 
         private static XmlSerializer GenerateSerializer(string rootName , Type dtoType)
