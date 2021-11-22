@@ -1,4 +1,5 @@
 ﻿using CarDealer.Data;
+using CarDealer.DTO.ExportDto;
 using CarDealer.DTO.ImportDto;
 using CarDealer.Models;
 using System;
@@ -6,6 +7,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Xml.Serialization;
 
 namespace CarDealer
@@ -20,8 +22,14 @@ namespace CarDealer
             //ResetDb(db);
 
             //      or ../../../
-            string inputXml = File.ReadAllText("./Datasets/customers.xml");
-            string result = ImportCustomers(db, inputXml);
+
+            //Imports
+            //string inputXml = File.ReadAllText("./Datasets/sales.xml");
+            // string result = ImportSales(db, inputXml);
+            // Console.WriteLine(result);
+
+            //Exports
+            string result = GetCarsWithDistance(db);
             Console.WriteLine(result);
         }
 
@@ -179,6 +187,65 @@ namespace CarDealer
 
             return $"Successfully imported {customers.Count}";
         }
+
+
+        //Query 13. Import Sales
+        public static string ImportSales(CarDealerContext context, string inputXml)
+        {
+            XmlSerializer xmlSerializer = GenerateSerializer("Sales", typeof(ImportSaleDto[]));
+            using StringReader stringReader = new StringReader(inputXml);
+
+            ImportSaleDto[] salesDto = (ImportSaleDto[])xmlSerializer.Deserialize(stringReader);
+
+            var sales = salesDto
+                .Where(sd => context.Cars.Any(c => c.Id == sd.CarId))
+                .Select(x => new Sale()
+                {
+                    CarId=x.CarId,
+                    CustomerId=x.CustomerId,
+                    Discount=x.Discount
+                })
+                .ToList();
+
+           
+            context.Sales.AddRange(sales);
+            context.SaveChanges();
+
+            return  $"Successfully imported {sales.Count}";
+        }
+
+        //Query 14. Cars With Distance
+        public static string GetCarsWithDistance(CarDealerContext context)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            using StringWriter stringWriter = new StringWriter(sb);
+
+            XmlSerializer xmlSerializer = GenerateSerializer("cars", typeof(ExportCarWithDistanceDto[]));
+
+            XmlSerializerNamespaces namespaces = new XmlSerializerNamespaces();
+            namespaces.Add(String.Empty, String.Empty);
+
+            ExportCarWithDistanceDto[] carsDtos = context.Cars
+                .Where(c => c.TravelledDistance > 2000000)
+                .OrderBy(x => x.Make)
+                .ThenBy(x => x.Model)
+                .Take(10)
+                .Select(c => new ExportCarWithDistanceDto()
+                {
+                    Make=c.Make,
+                    Model=c.Model,
+                    TravelledDistance=c.TravelledDistance.ToString()//its long so we give it ToString
+                })
+                .ToArray();
+
+            xmlSerializer.Serialize(stringWriter, carsDtos,namespaces);
+
+            return sb.ToString().Trim();
+
+        }
+
+
 
         private static XmlSerializer GenerateSerializer(string rootName , Type dtoType)
         {
