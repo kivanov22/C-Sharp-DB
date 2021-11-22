@@ -4,6 +4,7 @@ using ProductShop.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Xml.Serialization;
 
 namespace ProductShop
@@ -15,8 +16,8 @@ namespace ProductShop
             ProductShopContext db = new ProductShopContext();
 
             //Imports
-            string inputXml = File.ReadAllText("./Datasets/products.xml");
-            string result = ImportProducts(db, inputXml);
+            string inputXml = File.ReadAllText("./Datasets/categories.xml");
+            string result = ImportCategories(db, inputXml);
             Console.WriteLine(result);
         }
 
@@ -81,6 +82,46 @@ namespace ProductShop
 
 
             return $"Successfully imported {products.Count}";
+        }
+
+
+        //Query 3. Import Categories
+        public static string ImportCategories(ProductShopContext context, string inputXml)
+        {
+            XmlSerializer xmlSerializer = GenerateSerializer("Categories", typeof(ImportCategoryDto[]));
+
+            StringReader stringReader = new StringReader(inputXml);
+
+            ImportCategoryDto[] imporCategoryDtos = (ImportCategoryDto[])xmlSerializer.Deserialize(stringReader);
+
+            ICollection<Category> categories = new HashSet<Category>();
+
+            foreach (var categoryDto in imporCategoryDtos)
+            {
+               // var categoryExist = imporCategoryDtos.Where(x => context.Categories.Any(ct => ct.Name == null));
+
+                if (categoryDto == null)
+                {
+                    continue;
+                }
+
+                Category c = new Category()
+                {
+                    Name = categoryDto.Name
+                };
+                categories.Add(c);
+            }
+
+            context.AddRange(categories);
+            context.SaveChanges();
+
+            return $"Successfully imported {categories.Count}";
+        }
+
+        //Query 4. Import Categories and Products
+        public static string ImportCategoryProducts(ProductShopContext context, string inputXml)
+        {
+
         }
 
         private static XmlSerializer GenerateSerializer(string rootName, Type dtoType)
