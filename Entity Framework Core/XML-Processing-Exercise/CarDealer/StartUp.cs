@@ -29,7 +29,7 @@ namespace CarDealer
             // Console.WriteLine(result);
 
             //Exports
-            string result = GetCarsWithDistance(db);
+            string result = GetCarsFromMakeBmw(db);
             Console.WriteLine(result);
         }
 
@@ -242,7 +242,35 @@ namespace CarDealer
             xmlSerializer.Serialize(stringWriter, carsDtos,namespaces);
 
             return sb.ToString().Trim();
+        }
 
+        //Query 15. Cars from make BMW
+        public static string GetCarsFromMakeBmw(CarDealerContext context)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            using StringWriter stringWriter = new StringWriter(sb);
+
+            XmlSerializer xmlSerializer = GenerateSerializer("cars", typeof(ExportCarFromMakeDto[]));
+
+            XmlSerializerNamespaces namespaces = new XmlSerializerNamespaces();
+            namespaces.Add(String.Empty, String.Empty);
+
+            ExportCarFromMakeDto[] carDtos = context.Cars
+                .Where(m => m.Make == "BMW")
+                .OrderBy(a => a.Model)
+                .ThenByDescending(d => d.TravelledDistance)
+                .Select(x => new ExportCarFromMakeDto()
+                {
+                    Id =x.Id,
+                    Model=x.Model,
+                    TravelledDistance=x.TravelledDistance.ToString()
+                })
+                .ToArray();
+
+            xmlSerializer.Serialize(stringWriter, carDtos, namespaces);
+
+            return sb.ToString().Trim();
         }
 
 
