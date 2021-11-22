@@ -24,7 +24,7 @@
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer(@"Server=DESKTOP-M28UK1S\\SQLEXPRESS;Database=ProductShop;Integrated Security=True");
+                optionsBuilder.UseSqlServer("Server=DESKTOP-M28UK1S\\SQLEXPRESS;Database=ProductShop;Trusted_Connection=True");
             }
         }
 

@@ -15,8 +15,8 @@ namespace ProductShop
             ProductShopContext db = new ProductShopContext();
 
             //Imports
-            string inputXml = File.ReadAllText("./Datasets/users.xml");
-            string result = ImportUsers(db, inputXml);
+            string inputXml = File.ReadAllText("./Datasets/products.xml");
+            string result = ImportProducts(db, inputXml);
             Console.WriteLine(result);
         }
 
@@ -27,7 +27,7 @@ namespace ProductShop
             XmlRootAttribute xmlRootAttribute = new XmlRootAttribute("Users");
             XmlSerializer xmlSerializer = new XmlSerializer(typeof(ImportUserDto[]), xmlRootAttribute);
 
-             StringReader stringReader = new StringReader(inputXml);
+            StringReader stringReader = new StringReader(inputXml);
 
             ImportUserDto[] dtos = (ImportUserDto[])
                 xmlSerializer.Deserialize(stringReader);
@@ -38,9 +38,9 @@ namespace ProductShop
             {
                 User u = new User()
                 {
-                    FirstName=userDto.FirstName,
-                    LastName=userDto.LastName,
-                    Age=userDto.Age
+                    FirstName = userDto.FirstName,
+                    LastName = userDto.LastName,
+                    Age = userDto.Age
                 };
                 users.Add(u);
             }
@@ -51,6 +51,37 @@ namespace ProductShop
             return $"Successfully imported {users.Count}";
         }
 
+
+        //Query 2. Import Products
+        public static string ImportProducts(ProductShopContext context, string inputXml)
+        {
+            XmlSerializer xmlSerializer = GenerateSerializer("Products", typeof(ImportProductDto[]));
+
+             StringReader stringReader = new StringReader(inputXml);
+
+            ImportProductDto[] imporProducttDtos = (ImportProductDto[])xmlSerializer.Deserialize(stringReader);
+
+            ICollection<Product> products = new HashSet<Product>();
+
+            foreach (var productDto in imporProducttDtos)
+            {
+                Product p = new Product()
+                {
+                    Name=productDto.Name,
+                    Price=productDto.Price,
+                    SellerId=productDto.SellerId,
+                    BuyerId=productDto.BuyerId
+                };
+                products.Add(p);
+            }
+
+            context.AddRange(products);
+            context.SaveChanges();
+
+
+
+            return $"Successfully imported {products.Count}";
+        }
 
         private static XmlSerializer GenerateSerializer(string rootName, Type dtoType)
         {
