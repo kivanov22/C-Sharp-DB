@@ -20,8 +20,8 @@ namespace CarDealer
             //ResetDb(db);
 
             //      or ../../../
-            string inputXml = File.ReadAllText("./Datasets/parts.xml");
-            string result = ImportCars(db, inputXml);
+            string inputXml = File.ReadAllText("./Datasets/customers.xml");
+            string result = ImportCustomers(db, inputXml);
             Console.WriteLine(result);
         }
 
@@ -152,6 +152,33 @@ namespace CarDealer
             return $"Successfully imported {cars.Count}";
         }
 
+        //Query 12. Import Customers
+        public static string ImportCustomers(CarDealerContext context, string inputXml)
+        {
+            XmlSerializer xmlSerializer = GenerateSerializer("Customers", typeof(ImportCustomerDto[]));
+            using StringReader stringReader = new StringReader(inputXml);
+
+            ImportCustomerDto[] customerDto = (ImportCustomerDto[])xmlSerializer.Deserialize(stringReader);
+
+            ICollection<Customer> customers = new HashSet<Customer>();
+
+            foreach (var cus in customerDto)
+            {
+                Customer c = new Customer()
+                {
+                    Name = cus.Name,
+                    BirthDate = cus.BirthDate,
+                    IsYoungDriver = cus.IsYoungDriver
+                };
+
+                customers.Add(c);
+            }
+
+            context.Customers.AddRange(customers);
+            context.SaveChanges();
+
+            return $"Successfully imported {customers.Count}";
+        }
 
         private static XmlSerializer GenerateSerializer(string rootName , Type dtoType)
         {
