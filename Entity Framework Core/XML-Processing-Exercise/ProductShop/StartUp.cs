@@ -23,7 +23,7 @@ namespace ProductShop
             //Console.WriteLine(result);
 
             //Exports
-            string result = GetProductsInRange(db);
+            string result = GetCategoriesByProductsCount(db);
             Console.WriteLine(result);
         }
 
@@ -186,6 +186,77 @@ namespace ProductShop
                .OrderBy(p => p.Price)
                .Take(10)
                .ToArray();
+
+            xmlSerializer.Serialize(stringWriter, productDto, namespaces);
+
+            return sb.ToString().Trim();
+        }
+
+
+        //Query 6. Sold Products
+        public static string GetSoldProducts(ProductShopContext context)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            StringWriter stringWriter = new StringWriter(sb);
+
+            XmlSerializer xmlSerializer = GenerateSerializer("Users", typeof(SoldProduct[]));
+
+            XmlSerializerNamespaces namespaces = new XmlSerializerNamespaces();
+            namespaces.Add(String.Empty, String.Empty);
+
+            var productDto = context.Users
+                .Where(u => u.ProductsSold.Any())
+                .OrderBy(p => p.LastName)
+                .ThenBy(p => p.FirstName)
+                .Select(s => new SoldProduct
+                {
+                    FirstName = s.FirstName,
+                    LastName = s.LastName,
+                    SoldProducts = s.ProductsSold.Select(ps => new ProductDto
+                    {
+                        Name = ps.Name,
+                        Price = ps.Price
+                    }).ToArray()
+                })
+                .OrderBy(x => x.LastName)
+                .ThenBy(x => x.FirstName)
+                .Take(5)
+                .ToArray();
+               
+
+
+            xmlSerializer.Serialize(stringWriter, productDto, namespaces);
+
+            return sb.ToString().Trim();
+        }
+
+        //Query 7. Categories By Products Count
+        public static string GetCategoriesByProductsCount(ProductShopContext context)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            StringWriter stringWriter = new StringWriter(sb);
+
+            XmlSerializer xmlSerializer = GenerateSerializer("Categories", typeof(ExportCategoryByProductCountDto[]));
+
+            XmlSerializerNamespaces namespaces = new XmlSerializerNamespaces();
+            namespaces.Add(String.Empty, String.Empty);
+
+            var productDto = context.Categories
+                .Select(c => new ExportCategoryByProductCountDto
+                {
+                    Name = c.Name,
+                    Count=c.CategoryProducts.Count,
+                    AveragePrice=c.CategoryProducts.Average(x=>x.Product.Price),
+                    TotalRevenue = c.CategoryProducts.Sum(x=>x.Product.Price)
+
+                })
+                .OrderByDescending(p=>p.Count)
+                .ThenBy(t=>t.TotalRevenue)
+                .ToArray();
+
+
 
             xmlSerializer.Serialize(stringWriter, productDto, namespaces);
 
