@@ -1,4 +1,5 @@
-﻿using ProductShop.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using ProductShop.Data;
 using ProductShop.Dtos.Export;
 using ProductShop.Dtos.Import;
 using ProductShop.Models;
@@ -23,7 +24,7 @@ namespace ProductShop
             //Console.WriteLine(result);
 
             //Exports
-            string result = GetCategoriesByProductsCount(db);
+            string result = GetUsersWithProducts(db);
             Console.WriteLine(result);
         }
 
@@ -259,6 +260,60 @@ namespace ProductShop
 
 
             xmlSerializer.Serialize(stringWriter, productDto, namespaces);
+
+            return sb.ToString().Trim();
+        }
+
+
+        //Query 8. Users and Products
+        public static string GetUsersWithProducts(ProductShopContext context)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            StringWriter stringWriter = new StringWriter(sb);
+
+            XmlSerializer xmlSerializer = GenerateSerializer("Users", typeof(UserProducts));
+
+            XmlSerializerNamespaces namespaces = new XmlSerializerNamespaces();
+            namespaces.Add(String.Empty, String.Empty);
+
+            var count = context.Users.Where(u => u.ProductsSold.Count > 0).Count();
+
+            var users = context.Users
+                .Include(x => x.ProductsSold)
+                .ToArray()
+                .Where(x => x.ProductsSold.Count > 0)
+                .Select(x => new UserInfo
+                {
+                    FirstName = x.FirstName,
+                    LastName = x.LastName,
+                    Age = x.Age,
+                    SoldProducts = new SoldProducts
+                    {
+                        Count = x.ProductsSold.Count,
+                        Products = x.ProductsSold.Select(p => new ProductInfo
+                        {
+                            Name = p.Name,
+                            Price = p.Price
+                        })
+                        .OrderByDescending(d => d.Price)
+                        .ToArray()
+                    }
+                })
+                .OrderByDescending(x => x.SoldProducts.Count)
+                .Take(10)
+                .ToArray();
+
+            var userProducts = new UserProducts()
+            {
+                Users = users,
+                Count = count
+            };
+                
+
+
+
+            xmlSerializer.Serialize(stringWriter, userProducts, namespaces);
 
             return sb.ToString().Trim();
         }
