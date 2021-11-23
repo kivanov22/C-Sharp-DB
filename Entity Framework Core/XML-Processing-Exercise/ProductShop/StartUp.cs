@@ -1,10 +1,12 @@
 ﻿using ProductShop.Data;
+using ProductShop.Dtos.Export;
 using ProductShop.Dtos.Import;
 using ProductShop.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Xml.Serialization;
 
 namespace ProductShop
@@ -16,8 +18,12 @@ namespace ProductShop
             ProductShopContext db = new ProductShopContext();
 
             //Imports
-            string inputXml = File.ReadAllText("./Datasets/categories.xml");
-            string result = ImportCategories(db, inputXml);
+            //string inputXml = File.ReadAllText("./Datasets/categories-products.xml");
+            //string result = ImportCategoryProducts(db, inputXml);
+            //Console.WriteLine(result);
+
+            //Exports
+            string result = GetProductsInRange(db);
             Console.WriteLine(result);
         }
 
@@ -121,7 +127,69 @@ namespace ProductShop
         //Query 4. Import Categories and Products
         public static string ImportCategoryProducts(ProductShopContext context, string inputXml)
         {
+            XmlSerializer xmlSerializer = GenerateSerializer("CategoryProducts", typeof(ImportCategoryProductDto[]));
 
+            StringReader stringReader = new StringReader(inputXml);
+
+            ImportCategoryProductDto[] imporCategoryDtos = (ImportCategoryProductDto[])xmlSerializer.Deserialize(stringReader);
+               
+
+            ICollection<CategoryProduct> categoriesProducts = new HashSet<CategoryProduct>();
+
+            
+
+            
+            foreach (var categoryDto in imporCategoryDtos)
+            {//??0 imports
+                if (context.Categories.Any(cat=>cat.Id !=categoryDto.CategoryId) ||
+                   context.Products.Any(p => p.Id != categoryDto.ProductId))
+                {
+                    continue;
+                }
+
+                CategoryProduct c = new CategoryProduct()
+                {
+                  CategoryId=categoryDto.CategoryId,
+                  ProductId=categoryDto.ProductId,
+                };
+                categoriesProducts.Add(c);
+            }
+
+            context.AddRange(categoriesProducts);
+            context.SaveChanges();
+
+
+
+            return $"Successfully imported {categoriesProducts.Count}";
+        }
+
+        //Query 5. Products In Range
+        public static string GetProductsInRange(ProductShopContext context)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            StringWriter stringWriter = new StringWriter(sb);
+
+            XmlSerializer xmlSerializer = GenerateSerializer("Products", typeof(ExportProductInRangeDto[]));
+
+            XmlSerializerNamespaces namespaces = new XmlSerializerNamespaces();
+            namespaces.Add(String.Empty, String.Empty);
+
+            var productDto = context.Products
+               .Where(x => x.Price >= 500 && x.Price <= 1000)
+               .Select(p => new ExportProductInRangeDto
+               {
+                   Name = p.Name,
+                   Price = p.Price,
+                   Buyer = p.Buyer.FirstName + " " +p.Buyer.LastName
+               })
+               .OrderBy(p => p.Price)
+               .Take(10)
+               .ToArray();
+
+            xmlSerializer.Serialize(stringWriter, productDto, namespaces);
+
+            return sb.ToString().Trim();
         }
 
         private static XmlSerializer GenerateSerializer(string rootName, Type dtoType)
