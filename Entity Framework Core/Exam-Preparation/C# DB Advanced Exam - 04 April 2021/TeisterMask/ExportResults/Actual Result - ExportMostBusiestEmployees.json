@@ -1,1 +1,654 @@
-TODO
+[
+  {
+    "Username": "mmcellen1",
+    "Tasks": [
+      {
+        "TaskName": "Oregon Figwort",
+        "OpenDate": "05/12/2018",
+        "DueDate": "09/06/2019",
+        "LabelType": "CSharpAdvanced",
+        "ExecutionType": "Finished"
+      },
+      {
+        "TaskName": "Nodding Sage",
+        "OpenDate": "04/02/2018",
+        "DueDate": "08/19/2019",
+        "LabelType": "EntityFramework",
+        "ExecutionType": "InProgress"
+      },
+      {
+        "TaskName": "Mountain Naupaka",
+        "OpenDate": "03/29/2018",
+        "DueDate": "05/03/2019",
+        "LabelType": "EntityFramework",
+        "ExecutionType": "SprintBacklog"
+      },
+      {
+        "TaskName": "Fissidens Moss",
+        "OpenDate": "03/28/2018",
+        "DueDate": "04/27/2019",
+        "LabelType": "CSharpAdvanced",
+        "ExecutionType": "SprintBacklog"
+      },
+      {
+        "TaskName": "Leafy",
+        "OpenDate": "02/27/2018",
+        "DueDate": "04/13/2019",
+        "LabelType": "Priority",
+        "ExecutionType": "ProductBacklog"
+      },
+      {
+        "TaskName": "Gairdner's Yampah",
+        "OpenDate": "05/16/2018",
+        "DueDate": "04/07/2019",
+        "LabelType": "Hibernate",
+        "ExecutionType": "SprintBacklog"
+      },
+      {
+        "TaskName": "Toothed Midsorus Fern",
+        "OpenDate": "04/24/2018",
+        "DueDate": "03/18/2019",
+        "LabelType": "Hibernate",
+        "ExecutionType": "SprintBacklog"
+      },
+      {
+        "TaskName": "Bituminaria",
+        "OpenDate": "07/28/2018",
+        "DueDate": "02/03/2019",
+        "LabelType": "Hibernate",
+        "ExecutionType": "InProgress"
+      },
+      {
+        "TaskName": "Arctic Raspberry",
+        "OpenDate": "06/23/2018",
+        "DueDate": "01/29/2019",
+        "LabelType": "EntityFramework",
+        "ExecutionType": "ProductBacklog"
+      },
+      {
+        "TaskName": "Indian Canyon Fleabane",
+        "OpenDate": "03/25/2018",
+        "DueDate": "01/05/2019",
+        "LabelType": "CSharpAdvanced",
+        "ExecutionType": "Finished"
+      },
+      {
+        "TaskName": "Scarlet Globemallow",
+        "OpenDate": "06/08/2018",
+        "DueDate": "12/29/2018",
+        "LabelType": "CSharpAdvanced",
+        "ExecutionType": "Finished"
+      },
+      {
+        "TaskName": "Wetslope Buttercup",
+        "OpenDate": "03/07/2018",
+        "DueDate": "11/21/2018",
+        "LabelType": "EntityFramework",
+        "ExecutionType": "InProgress"
+      }
+    ]
+  },
+  {
+    "Username": "nbremenj",
+    "Tasks": [
+      {
+        "TaskName": "Plains Fleabane",
+        "OpenDate": "05/15/2018",
+        "DueDate": "11/03/2019",
+        "LabelType": "CSharpAdvanced",
+        "ExecutionType": "SprintBacklog"
+      },
+      {
+        "TaskName": "Oregon Figwort",
+        "OpenDate": "05/12/2018",
+        "DueDate": "09/06/2019",
+        "LabelType": "CSharpAdvanced",
+        "ExecutionType": "Finished"
+      },
+      {
+        "TaskName": "Leadwort",
+        "OpenDate": "06/30/2018",
+        "DueDate": "07/29/2019",
+        "LabelType": "EntityFramework",
+        "ExecutionType": "InProgress"
+      },
+      {
+        "TaskName": "Uvero De Monte",
+        "OpenDate": "06/19/2018",
+        "DueDate": "06/14/2019",
+        "LabelType": "Priority",
+        "ExecutionType": "InProgress"
+      },
+      {
+        "TaskName": "Umbrella-tree",
+        "OpenDate": "07/12/2018",
+        "DueDate": "04/29/2019",
+        "LabelType": "Hibernate",
+        "ExecutionType": "Finished"
+      },
+      {
+        "TaskName": "Fissidens Moss",
+        "OpenDate": "03/28/2018",
+        "DueDate": "04/27/2019",
+        "LabelType": "CSharpAdvanced",
+        "ExecutionType": "SprintBacklog"
+      },
+      {
+        "TaskName": "Feverfew",
+        "OpenDate": "07/05/2018",
+        "DueDate": "02/26/2019",
+        "LabelType": "Hibernate",
+        "ExecutionType": "SprintBacklog"
+      },
+      {
+        "TaskName": "Beautybush",
+        "OpenDate": "02/24/2018",
+        "DueDate": "02/13/2019",
+        "LabelType": "EntityFramework",
+        "ExecutionType": "ProductBacklog"
+      },
+      {
+        "TaskName": "Moleplant",
+        "OpenDate": "01/26/2018",
+        "DueDate": "02/12/2019",
+        "LabelType": "JavaAdvanced",
+        "ExecutionType": "ProductBacklog"
+      },
+      {
+        "TaskName": "Arctic Raspberry",
+        "OpenDate": "06/23/2018",
+        "DueDate": "01/29/2019",
+        "LabelType": "EntityFramework",
+        "ExecutionType": "ProductBacklog"
+      },
+      {
+        "TaskName": "Wetslope Buttercup",
+        "OpenDate": "03/07/2018",
+        "DueDate": "11/21/2018",
+        "LabelType": "EntityFramework",
+        "ExecutionType": "InProgress"
+      }
+    ]
+  },
+  {
+    "Username": "olathleiffurec",
+    "Tasks": [
+      {
+        "TaskName": "Plains Fleabane",
+        "OpenDate": "05/15/2018",
+        "DueDate": "11/03/2019",
+        "LabelType": "CSharpAdvanced",
+        "ExecutionType": "SprintBacklog"
+      },
+      {
+        "TaskName": "Oregon Figwort",
+        "OpenDate": "05/12/2018",
+        "DueDate": "09/06/2019",
+        "LabelType": "CSharpAdvanced",
+        "ExecutionType": "Finished"
+      },
+      {
+        "TaskName": "Pale Spikerush",
+        "OpenDate": "04/26/2018",
+        "DueDate": "07/20/2019",
+        "LabelType": "Priority",
+        "ExecutionType": "ProductBacklog"
+      },
+      {
+        "TaskName": "Fissidens Moss",
+        "OpenDate": "03/28/2018",
+        "DueDate": "04/27/2019",
+        "LabelType": "CSharpAdvanced",
+        "ExecutionType": "SprintBacklog"
+      },
+      {
+        "TaskName": "Maguire's Milkvetch",
+        "OpenDate": "05/12/2018",
+        "DueDate": "04/19/2019",
+        "LabelType": "Hibernate",
+        "ExecutionType": "SprintBacklog"
+      },
+      {
+        "TaskName": "False Spiraea",
+        "OpenDate": "03/20/2018",
+        "DueDate": "04/10/2019",
+        "LabelType": "Priority",
+        "ExecutionType": "Finished"
+      },
+      {
+        "TaskName": "Stickystem Penstemon",
+        "OpenDate": "05/10/2018",
+        "DueDate": "04/10/2019",
+        "LabelType": "CSharpAdvanced",
+        "ExecutionType": "InProgress"
+      },
+      {
+        "TaskName": "Back",
+        "OpenDate": "06/07/2018",
+        "DueDate": "12/30/2018",
+        "LabelType": "Hibernate",
+        "ExecutionType": "InProgress"
+      },
+      {
+        "TaskName": "Ashy Sandmat",
+        "OpenDate": "04/06/2018",
+        "DueDate": "12/18/2018",
+        "LabelType": "JavaAdvanced",
+        "ExecutionType": "Finished"
+      },
+      {
+        "TaskName": "Loeskypnum Moss",
+        "OpenDate": "07/28/2018",
+        "DueDate": "11/20/2018",
+        "LabelType": "JavaAdvanced",
+        "ExecutionType": "Finished"
+      },
+      {
+        "TaskName": "Globe Ball Lichen",
+        "OpenDate": "07/23/2018",
+        "DueDate": "11/18/2018",
+        "LabelType": "CSharpAdvanced",
+        "ExecutionType": "SprintBacklog"
+      }
+    ]
+  },
+  {
+    "Username": "ostollsteimer5",
+    "Tasks": [
+      {
+        "TaskName": "Oregon Figwort",
+        "OpenDate": "05/12/2018",
+        "DueDate": "09/06/2019",
+        "LabelType": "CSharpAdvanced",
+        "ExecutionType": "Finished"
+      },
+      {
+        "TaskName": "Umbrella-tree",
+        "OpenDate": "07/12/2018",
+        "DueDate": "04/29/2019",
+        "LabelType": "Hibernate",
+        "ExecutionType": "Finished"
+      },
+      {
+        "TaskName": "Stickystem Penstemon",
+        "OpenDate": "05/10/2018",
+        "DueDate": "04/10/2019",
+        "LabelType": "CSharpAdvanced",
+        "ExecutionType": "InProgress"
+      },
+      {
+        "TaskName": "Feverfew",
+        "OpenDate": "07/05/2018",
+        "DueDate": "02/26/2019",
+        "LabelType": "Hibernate",
+        "ExecutionType": "SprintBacklog"
+      },
+      {
+        "TaskName": "Arctic Raspberry",
+        "OpenDate": "06/23/2018",
+        "DueDate": "01/29/2019",
+        "LabelType": "EntityFramework",
+        "ExecutionType": "ProductBacklog"
+      },
+      {
+        "TaskName": "Back",
+        "OpenDate": "06/07/2018",
+        "DueDate": "12/30/2018",
+        "LabelType": "Hibernate",
+        "ExecutionType": "InProgress"
+      },
+      {
+        "TaskName": "Plains Flax",
+        "OpenDate": "02/07/2018",
+        "DueDate": "11/22/2018",
+        "LabelType": "Priority",
+        "ExecutionType": "Finished"
+      },
+      {
+        "TaskName": "Wetslope Buttercup",
+        "OpenDate": "03/07/2018",
+        "DueDate": "11/21/2018",
+        "LabelType": "EntityFramework",
+        "ExecutionType": "InProgress"
+      },
+      {
+        "TaskName": "Globe Ball Lichen",
+        "OpenDate": "07/23/2018",
+        "DueDate": "11/18/2018",
+        "LabelType": "CSharpAdvanced",
+        "ExecutionType": "SprintBacklog"
+      }
+    ]
+  },
+  {
+    "Username": "jbehlingp",
+    "Tasks": [
+      {
+        "TaskName": "Plains Fleabane",
+        "OpenDate": "05/15/2018",
+        "DueDate": "11/03/2019",
+        "LabelType": "CSharpAdvanced",
+        "ExecutionType": "SprintBacklog"
+      },
+      {
+        "TaskName": "Maguire's Milkvetch",
+        "OpenDate": "05/12/2018",
+        "DueDate": "04/19/2019",
+        "LabelType": "Hibernate",
+        "ExecutionType": "SprintBacklog"
+      },
+      {
+        "TaskName": "Leafy",
+        "OpenDate": "02/27/2018",
+        "DueDate": "04/13/2019",
+        "LabelType": "Priority",
+        "ExecutionType": "ProductBacklog"
+      },
+      {
+        "TaskName": "False Spiraea",
+        "OpenDate": "03/20/2018",
+        "DueDate": "04/10/2019",
+        "LabelType": "Priority",
+        "ExecutionType": "Finished"
+      },
+      {
+        "TaskName": "Western Mountain Aster",
+        "OpenDate": "09/08/2018",
+        "DueDate": "03/30/2019",
+        "LabelType": "Hibernate",
+        "ExecutionType": "InProgress"
+      },
+      {
+        "TaskName": "Prostrate Milkvetch",
+        "OpenDate": "02/04/2018",
+        "DueDate": "03/16/2019",
+        "LabelType": "Hibernate",
+        "ExecutionType": "ProductBacklog"
+      },
+      {
+        "TaskName": "Wood Wakerobin",
+        "OpenDate": "04/25/2018",
+        "DueDate": "02/08/2019",
+        "LabelType": "JavaAdvanced",
+        "ExecutionType": "ProductBacklog"
+      },
+      {
+        "TaskName": "Plains Flax",
+        "OpenDate": "02/07/2018",
+        "DueDate": "11/22/2018",
+        "LabelType": "Priority",
+        "ExecutionType": "Finished"
+      }
+    ]
+  },
+  {
+    "Username": "pclaffeyq",
+    "Tasks": [
+      {
+        "TaskName": "Plains Fleabane",
+        "OpenDate": "05/15/2018",
+        "DueDate": "11/03/2019",
+        "LabelType": "CSharpAdvanced",
+        "ExecutionType": "SprintBacklog"
+      },
+      {
+        "TaskName": "Wood Wakerobin",
+        "OpenDate": "04/25/2018",
+        "DueDate": "02/08/2019",
+        "LabelType": "JavaAdvanced",
+        "ExecutionType": "ProductBacklog"
+      },
+      {
+        "TaskName": "Indian Canyon Fleabane",
+        "OpenDate": "03/25/2018",
+        "DueDate": "01/05/2019",
+        "LabelType": "CSharpAdvanced",
+        "ExecutionType": "Finished"
+      },
+      {
+        "TaskName": "Clammy",
+        "OpenDate": "04/30/2018",
+        "DueDate": "01/03/2019",
+        "LabelType": "JavaAdvanced",
+        "ExecutionType": "SprintBacklog"
+      },
+      {
+        "TaskName": "Ashy Sandmat",
+        "OpenDate": "04/06/2018",
+        "DueDate": "12/18/2018",
+        "LabelType": "JavaAdvanced",
+        "ExecutionType": "Finished"
+      },
+      {
+        "TaskName": "Plains Flax",
+        "OpenDate": "02/07/2018",
+        "DueDate": "11/22/2018",
+        "LabelType": "Priority",
+        "ExecutionType": "Finished"
+      },
+      {
+        "TaskName": "Wetslope Buttercup",
+        "OpenDate": "03/07/2018",
+        "DueDate": "11/21/2018",
+        "LabelType": "EntityFramework",
+        "ExecutionType": "InProgress"
+      },
+      {
+        "TaskName": "Loeskypnum Moss",
+        "OpenDate": "07/28/2018",
+        "DueDate": "11/20/2018",
+        "LabelType": "JavaAdvanced",
+        "ExecutionType": "Finished"
+      }
+    ]
+  },
+  {
+    "Username": "ymarcumt",
+    "Tasks": [
+      {
+        "TaskName": "Pale Spikerush",
+        "OpenDate": "04/26/2018",
+        "DueDate": "07/20/2019",
+        "LabelType": "Priority",
+        "ExecutionType": "ProductBacklog"
+      },
+      {
+        "TaskName": "Umbrella-tree",
+        "OpenDate": "07/12/2018",
+        "DueDate": "04/29/2019",
+        "LabelType": "Hibernate",
+        "ExecutionType": "Finished"
+      },
+      {
+        "TaskName": "Fissidens Moss",
+        "OpenDate": "03/28/2018",
+        "DueDate": "04/27/2019",
+        "LabelType": "CSharpAdvanced",
+        "ExecutionType": "SprintBacklog"
+      },
+      {
+        "TaskName": "Maguire's Milkvetch",
+        "OpenDate": "05/12/2018",
+        "DueDate": "04/19/2019",
+        "LabelType": "Hibernate",
+        "ExecutionType": "SprintBacklog"
+      },
+      {
+        "TaskName": "Stickystem Penstemon",
+        "OpenDate": "05/10/2018",
+        "DueDate": "04/10/2019",
+        "LabelType": "CSharpAdvanced",
+        "ExecutionType": "InProgress"
+      },
+      {
+        "TaskName": "Toothed Midsorus Fern",
+        "OpenDate": "04/24/2018",
+        "DueDate": "03/18/2019",
+        "LabelType": "Hibernate",
+        "ExecutionType": "SprintBacklog"
+      },
+      {
+        "TaskName": "Prostrate Milkvetch",
+        "OpenDate": "02/04/2018",
+        "DueDate": "03/16/2019",
+        "LabelType": "Hibernate",
+        "ExecutionType": "ProductBacklog"
+      },
+      {
+        "TaskName": "Bituminaria",
+        "OpenDate": "07/28/2018",
+        "DueDate": "02/03/2019",
+        "LabelType": "Hibernate",
+        "ExecutionType": "InProgress"
+      }
+    ]
+  },
+  {
+    "Username": "mdilucia3",
+    "Tasks": [
+      {
+        "TaskName": "Felt Lichen",
+        "OpenDate": "06/14/2018",
+        "DueDate": "09/06/2019",
+        "LabelType": "EntityFramework",
+        "ExecutionType": "InProgress"
+      },
+      {
+        "TaskName": "Leafy",
+        "OpenDate": "02/27/2018",
+        "DueDate": "04/13/2019",
+        "LabelType": "Priority",
+        "ExecutionType": "ProductBacklog"
+      },
+      {
+        "TaskName": "Gairdner's Yampah",
+        "OpenDate": "05/16/2018",
+        "DueDate": "04/07/2019",
+        "LabelType": "Hibernate",
+        "ExecutionType": "SprintBacklog"
+      },
+      {
+        "TaskName": "Western Mountain Aster",
+        "OpenDate": "09/08/2018",
+        "DueDate": "03/30/2019",
+        "LabelType": "Hibernate",
+        "ExecutionType": "InProgress"
+      },
+      {
+        "TaskName": "Moleplant",
+        "OpenDate": "01/26/2018",
+        "DueDate": "02/12/2019",
+        "LabelType": "JavaAdvanced",
+        "ExecutionType": "ProductBacklog"
+      },
+      {
+        "TaskName": "Wood Wakerobin",
+        "OpenDate": "04/25/2018",
+        "DueDate": "02/08/2019",
+        "LabelType": "JavaAdvanced",
+        "ExecutionType": "ProductBacklog"
+      },
+      {
+        "TaskName": "Wetslope Buttercup",
+        "OpenDate": "03/07/2018",
+        "DueDate": "11/21/2018",
+        "LabelType": "EntityFramework",
+        "ExecutionType": "InProgress"
+      }
+    ]
+  },
+  {
+    "Username": "codaly6",
+    "Tasks": [
+      {
+        "TaskName": "Plains Fleabane",
+        "OpenDate": "05/15/2018",
+        "DueDate": "11/03/2019",
+        "LabelType": "CSharpAdvanced",
+        "ExecutionType": "SprintBacklog"
+      },
+      {
+        "TaskName": "Nodding Sage",
+        "OpenDate": "04/02/2018",
+        "DueDate": "08/19/2019",
+        "LabelType": "EntityFramework",
+        "ExecutionType": "InProgress"
+      },
+      {
+        "TaskName": "Indian Canyon Fleabane",
+        "OpenDate": "03/25/2018",
+        "DueDate": "01/05/2019",
+        "LabelType": "CSharpAdvanced",
+        "ExecutionType": "Finished"
+      },
+      {
+        "TaskName": "Back",
+        "OpenDate": "06/07/2018",
+        "DueDate": "12/30/2018",
+        "LabelType": "Hibernate",
+        "ExecutionType": "InProgress"
+      },
+      {
+        "TaskName": "Scarlet Globemallow",
+        "OpenDate": "06/08/2018",
+        "DueDate": "12/29/2018",
+        "LabelType": "CSharpAdvanced",
+        "ExecutionType": "Finished"
+      },
+      {
+        "TaskName": "Ashy Sandmat",
+        "OpenDate": "04/06/2018",
+        "DueDate": "12/18/2018",
+        "LabelType": "JavaAdvanced",
+        "ExecutionType": "Finished"
+      }
+    ]
+  },
+  {
+    "Username": "kmurrow9",
+    "Tasks": [
+      {
+        "TaskName": "False Spiraea",
+        "OpenDate": "03/20/2018",
+        "DueDate": "04/10/2019",
+        "LabelType": "Priority",
+        "ExecutionType": "Finished"
+      },
+      {
+        "TaskName": "Gairdner's Yampah",
+        "OpenDate": "05/16/2018",
+        "DueDate": "04/07/2019",
+        "LabelType": "Hibernate",
+        "ExecutionType": "SprintBacklog"
+      },
+      {
+        "TaskName": "Feverfew",
+        "OpenDate": "07/05/2018",
+        "DueDate": "02/26/2019",
+        "LabelType": "Hibernate",
+        "ExecutionType": "SprintBacklog"
+      },
+      {
+        "TaskName": "Back",
+        "OpenDate": "06/07/2018",
+        "DueDate": "12/30/2018",
+        "LabelType": "Hibernate",
+        "ExecutionType": "InProgress"
+      },
+      {
+        "TaskName": "Ashy Sandmat",
+        "OpenDate": "04/06/2018",
+        "DueDate": "12/18/2018",
+        "LabelType": "JavaAdvanced",
+        "ExecutionType": "Finished"
+      },
+      {
+        "TaskName": "Wetslope Buttercup",
+        "OpenDate": "03/07/2018",
+        "DueDate": "11/21/2018",
+        "LabelType": "EntityFramework",
+        "ExecutionType": "InProgress"
+      }
+    ]
+  }
+]

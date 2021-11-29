@@ -10,12 +10,10 @@
         public TeisterMaskContext(DbContextOptions options)
             : base(options) { }
 
-        public DbSet<Task> Tasks { get; set; }
-        public DbSet<Project> Projects { get; set; }
         public DbSet<Employee> Employees { get; set; }
         public DbSet<EmployeeTask> EmployeesTasks { get; set; }
-
-
+        public DbSet<Project> Projects { get; set; }
+        public DbSet<Task> Tasks { get; set; }
 
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -30,9 +28,7 @@
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<EmployeeTask>()
-                   .HasKey(x => new { x.EmployeeId, x.TaskId });
-
-
+                 .HasKey(e => new { e.EmployeeId, e.TaskId });
         }
     }
 }

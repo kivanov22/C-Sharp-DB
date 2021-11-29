@@ -1,7 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-
+﻿
 namespace TeisterMask.Data.Models
 {
+    using System.ComponentModel.DataAnnotations.Schema;
     public class EmployeeTask
     {
         [ForeignKey("Employee")]

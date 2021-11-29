@@ -13,11 +13,10 @@ namespace TeisterMask.Data.Models
             this.EmployeesTasks = new HashSet<EmployeeTask>();
         }
 
-        [Key]
         public int Id { get; set; }
 
         [Required]
-        [Range(2, 40)]
+        [MaxLength(40)]
         public string Name { get; set; }
 
         public DateTime OpenDate { get; set; }
@@ -30,10 +29,10 @@ namespace TeisterMask.Data.Models
 
         [Required]
         [ForeignKey("Project")]
-        public int ProjectId { get; set; }//?? ForeignKey
+        public int ProjectId { get; set; }
 
-        public Project Project { get; set; }
+        public  Project Project { get; set; }
 
-        public ICollection<EmployeeTask> EmployeesTasks { get; set; }
+        public  ICollection<EmployeeTask> EmployeesTasks  { get; set; }
     }
 }

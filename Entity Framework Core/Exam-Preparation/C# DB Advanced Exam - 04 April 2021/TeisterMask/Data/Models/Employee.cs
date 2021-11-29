@@ -10,21 +10,19 @@ namespace TeisterMask.Data.Models
             this.EmployeesTasks = new HashSet<EmployeeTask>();
         }
 
-        [Key]
         public int Id { get; set; }
 
         [Required]
-        [Range(3,40)]
+        [MaxLength(40)]
         public string Username { get; set; }
 
         [Required]
-        
         public string Email { get; set; }
 
         [Required]
-        //[RegularExpression("[0-9]{3}-[0-9]{3}-[0-9]{4}")]
+        //[MaxLength(10)]
         public string Phone { get; set; }
 
-        public ICollection<EmployeeTask> EmployeesTasks { get; set; }
+        public  ICollection<EmployeeTask> EmployeesTasks  { get; set; }
     }
 }
