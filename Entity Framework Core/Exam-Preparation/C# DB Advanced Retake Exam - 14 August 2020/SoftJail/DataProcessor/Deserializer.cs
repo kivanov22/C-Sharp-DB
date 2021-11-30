@@ -168,72 +168,72 @@
             return sb.ToString().TrimEnd();
         }
 
-        public static string ImportOfficersPrisoners(SoftJailDbContext context, string xmlString)
-        {
-            var sb = new StringBuilder();
+        //public static string ImportOfficersPrisoners(SoftJailDbContext context, string xmlString)
+        //{
+        //    var sb = new StringBuilder();
 
-            XmlSerializer xmlSerializer = new XmlSerializer(typeof(ImportOfficerAndPrisonerDto[]),
-                new XmlRootAttribute("Officers"));
+        //    XmlSerializer xmlSerializer = new XmlSerializer(typeof(ImportOfficerAndPrisonerDto[]),
+        //        new XmlRootAttribute("Officers"));
 
-            var officersDtos = (ImportOfficerAndPrisonerDto[])xmlSerializer.Deserialize(new StringReader(xmlString));
+        //    var officersDtos = (ImportOfficerAndPrisonerDto[])xmlSerializer.Deserialize(new StringReader(xmlString));
 
-            List<Officer> officers = new List<Officer>();
+        //    List<Officer> officers = new List<Officer>();
 
-            foreach (var officerDto in officersDtos)
-            {
-                if (!IsValid(officerDto))
-                {
-                    sb.AppendLine("Invalid Data");
-                    continue;
-                }
+        //    foreach (var officerDto in officersDtos)
+        //    {
+        //        if (!IsValid(officerDto))
+        //        {
+        //            sb.AppendLine("Invalid Data");
+        //            continue;
+        //        }
 
-                object positionObj;
+        //        object positionObj;
 
-                bool isPositionValid = Enum.TryParse(typeof(Position), officerDto.Position, out positionObj);
+        //        bool isPositionValid = Enum.TryParse(typeof(Position), officerDto.Position, out positionObj);
 
-                if (!isPositionValid)
-                {
-                    sb.AppendLine("Invalid Data");
-                    continue;
-                }
+        //        if (!isPositionValid)
+        //        {
+        //            sb.AppendLine("Invalid Data");
+        //            continue;
+        //        }
 
-                object weaponObj;
+        //        object weaponObj;
 
-                bool isWeaponValid = Enum.TryParse(typeof(Weapon), officerDto.Weapon, out weaponObj);
+        //        bool isWeaponValid = Enum.TryParse(typeof(Weapon), officerDto.Weapon, out weaponObj);
 
-                if (!isWeaponValid)
-                {
-                    sb.AppendLine("Invalid Data");
-                    continue;
-                }
+        //        if (!isWeaponValid)
+        //        {
+        //            sb.AppendLine("Invalid Data");
+        //            continue;
+        //        }
 
-                var o = new Officer()
-                {
-                    FullName = officerDto.Name,
-                    Salary = officerDto.Money,
-                    Position = (Position)positionObj,
-                    Weapon = (Weapon)weaponObj,
-                    DepartmentId = officerDto.DepartmentId,
-                };
+        //        var o = new Officer()
+        //        {
+        //            FullName = officerDto.Name,
+        //            Salary = officerDto.Money,
+        //            Position = (Position)positionObj,
+        //            Weapon = (Weapon)weaponObj,
+        //            DepartmentId = officerDto.DepartmentId,
+        //        };
 
 
-                foreach (var prisonerDto in officerDto.Prisoners)
-                {
-                    o.OfficerPrisoners.Add(new OfficerPrisoner
-                    {
-                        Officer = o,
-                        PrisonerId = prisonerDto.PrisonerId
-                    });
-                }
+        //        foreach (var prisonerDto in officerDto.Prisoners)
+        //        {
+        //            o.OfficerPrisoners.Add(new OfficerPrisoner
+        //            {
+        //                Officer = o,
+        //                PrisonerId = prisonerDto.PrisonerId
+        //            });
+        //        }
 
-                officers.Add(o);
-                sb.AppendLine($"Imported {o.FullName} ({o.OfficerPrisoners.Count} prisoners)");
-            }
-            context.Officers.AddRange(officers);
-            context.SaveChanges();
+        //        officers.Add(o);
+        //        sb.AppendLine($"Imported {o.FullName} ({o.OfficerPrisoners.Count} prisoners)");
+        //    }
+        //    context.Officers.AddRange(officers);
+        //    context.SaveChanges();
 
-            return sb.ToString().Trim();
-        }
+        //    return sb.ToString().Trim();
+        //}
 
         private static bool IsValid(object obj)
         {
